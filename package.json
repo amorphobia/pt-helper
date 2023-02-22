@@ -51,8 +51,10 @@
     "supportURL": "https://github.com/amorphobia/pt-helper/issues",
     "license": "AGPL-3.0-or-later",
     "match": [
-      "*://tjupt.org/*",
-      "*://*.tjupt.org/*"
+      "*://hhanclub.top/*",
+      "*://nanyangpt.com/*",
+      "*://pt.sjtu.edu.cn/*",
+      "*://tjupt.org/*"
     ],
     "connect": [],
     "require": [],
@@ -63,7 +65,8 @@
       "GM_openInTab",
       "GM_getValue",
       "GM_setValue",
-      "GM_notification"
+      "GM_notification",
+      "GM_xmlhttpRequest"
     ],
     "exclude": [],
     "resources": [],
