@@ -44,7 +44,7 @@
     "i18n-descriptions": [
       { "i18n": "zh-CN", "description": "私密种子站点的助手" }
     ],
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "amorphobia",
     "homepage": "https://github.com/amorphobia/pt-helper",
     "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48c3R5bGU+LmMxe2ZpbGw6IzA1ZmZhMX0uYzJ7ZmlsbDojNzFjN2VjfS5jM3tmaWxsOiNmZjUyNTJ9LmM0e2ZpbGw6IzY1NzM3ZX08L3N0eWxlPjwvZGVmcz48dGl0bGU+c2hhcmUtZmlsbGVkPC90aXRsZT48Y2lyY2xlIGNsYXNzPSJjMSIgY3g9IjQwNS4zMyIgY3k9IjEwNi42NyIgcj0iODUuMzMiLz48Y2lyY2xlIGNsYXNzPSJjMiIgY3g9IjQwNS4zMyIgY3k9IjQwNS4zMyIgcj0iODUuMzMiLz48Y2lyY2xlIGNsYXNzPSJjMyIgY3g9IjEwNi42NyIgY3k9IjI1NiIgcj0iODUuMzMiLz48cGF0aCBjbGFzcz0iYzQiIGQ9Ik00MDUuMzMsMjk4LjY3YTEwNi41NCwxMDYuNTQsMCwwLDAtODMuOSw0MC44NkwyMDkuNjksMjgzLjY2YTEwNi43OCwxMDYuNzgsMCwwLDAsMC01NS4zMWwxMTEuNzUtNTUuODdhMTA2LjI3LDEwNi4yNywwLDEsMC0xOS4xMy0zOC4xNUwxOTAuNTYsMTkwLjJhMTA2LjY3LDEwNi42NywwLDEsMCwwLDEzMS42bDExMS43NSw1NS44N2ExMDYuNjcsMTA2LjY3LDAsMSwwLDEwMy03OVptMC0yNTZhNjQsNjQsMCwxLDEtNjQsNjRBNjQuMDcsNjQuMDcsMCwwLDEsNDA1LjMzLDQyLjY3Wk0xMDYuNjcsMzIwYTY0LDY0LDAsMSwxLDY0LTY0QTY0LjA3LDY0LjA3LDAsMCwxLDEwNi42NywzMjBaTTQwNS4zMyw0NjkuMzNhNjQsNjQsMCwxLDEsNjQtNjRBNjQuMDcsNjQuMDcsMCwwLDEsNDA1LjMzLDQ2OS4zM1oiLz48L3N2Zz4=",
@@ -71,5 +71,9 @@
     "exclude": [],
     "resources": [],
     "noframes": true
+  },
+  "dependencies": {
+    "sweetalert2": "=11.4.8",
+    "clipboard": "^2.0.11"
   }
 }
