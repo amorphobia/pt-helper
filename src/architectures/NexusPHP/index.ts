@@ -28,6 +28,7 @@ export class NexusPHP extends Common {
     public onLoad(): void {
         super.onLoad();
         this.getPasskey();
+        this.tweakBanner();
         this.sayThanks();
         this.addDirectLink();
     }
@@ -77,6 +78,8 @@ export class NexusPHP extends Common {
         });
     }
 
+    protected tweakBanner() {}
+
     protected sayThanks() {
         if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
             return;
@@ -95,9 +98,11 @@ export class NexusPHP extends Common {
         }
 
         const id_re = /id=[\d]+/;
-        const tds = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1) > td:nth-of-type(3)");
+        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
 
-        for (const td of tds) {
+        for (const tr of trs) {
+            const tds = tr.querySelectorAll("td");
+            const td = tds.length < 3 ? tds[1] : tds[2];
             const dl = td.querySelector("a");
             const result = id_re.exec(dl?.href ?? "");
             if (!result) {

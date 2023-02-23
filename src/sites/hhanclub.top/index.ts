@@ -24,7 +24,9 @@ export class Hhanclub extends NexusPHP {
 
     public onLoad(): void {
         super.onLoad();
+    }
 
+    protected tweakBanner(): void {
         if (this.getHostValue("bannerHide")) {
             this.css += `
 td.clear.nowrap img {
