@@ -58,7 +58,7 @@ export class Common {
 
         for (const item of this.menu_items) {
             const value = GM_getValue(item.id);
-            if (value && value != null) {
+            if (value != undefined && value != null) {
                 item.value = value;
             }
             let reg_item;
