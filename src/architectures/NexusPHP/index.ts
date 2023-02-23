@@ -25,8 +25,12 @@ export class NexusPHP extends Common {
     }
 
     protected getPasskey() {
-        const passkey = this.getHostValue("passkey");
-        if (passkey != null && passkey != "") {
+        const value = this.getHostValue("passkey");
+        let passkey = "";
+        if (value) {
+            passkey = String(value);
+        }
+        if (passkey != "") {
             this.passkey = passkey;
             return;
         }
@@ -35,25 +39,22 @@ export class NexusPHP extends Common {
         GM_xmlhttpRequest({
             method: "GET",
             url: cp_url,
-            headers: {
-                "Accept": "text/xml"
-            },
             onload: (response) => {
                 if (response.status != 200) {
                     console.log("Failed to get passkey.");
                     return;
                 }
-                const responseXML = response.responseXML
-                                  ? response.responseXML
-                                  : new DOMParser().parseFromString(response.responseText, "text/html");
 
-                const tds = responseXML.querySelectorAll("td.rowfollow");
+                const container = document.implementation.createHTMLDocument().documentElement;
+                container.innerHTML = response.responseText;
+
+                const tds = container.querySelectorAll("td.rowfollow");
                 for (const td of tds) {
                     const tc = td as HTMLTableCellElement;
                     const re = /[\w\d]{32}/;
                     const result = re.exec(tc.innerText);
                     if (result) {
-                        console.log("passkey = " + result[0]);
+                        this.setHostValue("passkey", result[0]);
                         this.passkey = result[0];
                         return;
                     }
@@ -66,7 +67,6 @@ export class NexusPHP extends Common {
                 console.log("Error to get passkey");
             }
         });
-        this.passkey = ""; 
     }
 
     protected sayThanks() {

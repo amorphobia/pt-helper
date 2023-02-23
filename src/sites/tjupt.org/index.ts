@@ -139,11 +139,22 @@ img.torrent_direct_link {
         }
     }
 
-    protected getPasskey(): string {
+    protected getPasskey() {
+        const value = this.getHostValue("passkey");
+        let passkey = "";
+        if (value) {
+            passkey = String(value);
+        }
+        if (passkey != "") {
+            this.passkey = passkey;
+            return;
+        }
         const link = document.querySelector("[title=\"Latest Torrents\"]") as HTMLLinkElement;
         const re = /passkey=([\d\w]+)/;
         const result = re.exec(link.href);
-        const passkey = result && result.length > 1 ? result[1] : "";
-        return passkey;
+        this.passkey = result && result.length > 1 ? result[1] : "";
+        if (this.passkey != "") {
+            this.setHostValue("passkey", this.passkey);
+        }
     }
 }

@@ -114,8 +114,12 @@ class NexusPHP extends common_1.Common {
         }
     }
     getPasskey() {
-        const passkey = this.getHostValue("passkey");
-        if (passkey != null && passkey != "") {
+        const value = this.getHostValue("passkey");
+        let passkey = "";
+        if (value) {
+            passkey = String(value);
+        }
+        if (passkey != "") {
             this.passkey = passkey;
             return;
         }
@@ -123,24 +127,20 @@ class NexusPHP extends common_1.Common {
         GM_xmlhttpRequest({
             method: "GET",
             url: cp_url,
-            headers: {
-                "Accept": "text/xml"
-            },
             onload: (response) => {
                 if (response.status != 200) {
                     console.log("Failed to get passkey.");
                     return;
                 }
-                const responseXML = response.responseXML
-                    ? response.responseXML
-                    : new DOMParser().parseFromString(response.responseText, "text/html");
-                const tds = responseXML.querySelectorAll("td.rowfollow");
+                const container = document.implementation.createHTMLDocument().documentElement;
+                container.innerHTML = response.responseText;
+                const tds = container.querySelectorAll("td.rowfollow");
                 for (const td of tds) {
                     const tc = td;
                     const re = /[\w\d]{32}/;
                     const result = re.exec(tc.innerText);
                     if (result) {
-                        console.log("passkey = " + result[0]);
+                        this.setHostValue("passkey", result[0]);
                         this.passkey = result[0];
                         return;
                     }
@@ -153,7 +153,6 @@ class NexusPHP extends common_1.Common {
                 console.log("Error to get passkey");
             }
         });
-        this.passkey = "";
     }
     sayThanks() {
         this.wait(2000).then(() => {
@@ -192,7 +191,7 @@ class Common {
     init() {
         for (const item of this.menu_items) {
             item.id = this.host + "_" + item.id;
-            if (item.type != "text" && GM_getValue(item.id) == null) {
+            if ((item.type == "switch" || item.type == "selection") && GM_getValue(item.id) == null) {
                 GM_setValue(item.id, item.value);
             }
         }
@@ -215,7 +214,10 @@ class Common {
         }
         this.registered_items = [];
         for (const item of this.menu_items) {
-            item.value = GM_getValue(item.id);
+            const value = GM_getValue(item.id);
+            if (value && value != null) {
+                item.value = value;
+            }
             let reg_item;
             switch (item.type) {
                 case "switch":
@@ -272,6 +274,9 @@ class Common {
     }
     getHostValue(id) {
         return GM_getValue(this.host + "_" + id);
+    }
+    setHostValue(id, value) {
+        GM_setValue(this.host + "_" + id, value);
     }
 }
 exports.Common = Common;
@@ -470,11 +475,22 @@ img.torrent_direct_link {
         }
     }
     getPasskey() {
+        const value = this.getHostValue("passkey");
+        let passkey = "";
+        if (value) {
+            passkey = String(value);
+        }
+        if (passkey != "") {
+            this.passkey = passkey;
+            return;
+        }
         const link = document.querySelector("[title=\"Latest Torrents\"]");
         const re = /passkey=([\d\w]+)/;
         const result = re.exec(link.href);
-        const passkey = result && result.length > 1 ? result[1] : "";
-        return passkey;
+        this.passkey = result && result.length > 1 ? result[1] : "";
+        if (this.passkey != "") {
+            this.setHostValue("passkey", this.passkey);
+        }
     }
 }
 exports.TJUPT = TJUPT;

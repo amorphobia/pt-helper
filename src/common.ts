@@ -24,7 +24,7 @@ export class Common {
     public init() {
         for (const item of this.menu_items) {
             item.id = this.host + "_" + item.id;
-            if (item.type != "text" && GM_getValue(item.id) == null) {
+            if ((item.type == "switch" || item.type == "selection") && GM_getValue(item.id) == null) {
                 GM_setValue(item.id, item.value);
             }
         }
@@ -57,7 +57,10 @@ export class Common {
         this.registered_items = [];
 
         for (const item of this.menu_items) {
-            item.value = GM_getValue(item.id);
+            const value = GM_getValue(item.id);
+            if (value && value != null) {
+                item.value = value;
+            }
             let reg_item;
             switch (item.type) {
                 case "switch":
@@ -117,7 +120,11 @@ export class Common {
         });
     }
 
-    protected getHostValue(id: string) {
+    protected getHostValue(id: string): string | number | boolean {
         return GM_getValue(this.host + "_" + id);
+    }
+
+    protected setHostValue(id: string, value: string | number | boolean) {
+        GM_setValue(this.host + "_" + id, value);
     }
 }
