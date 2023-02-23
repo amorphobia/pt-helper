@@ -1,27 +1,29 @@
-# userscript-typescript-template
+# PT Helper
 
-Template repo using Webpack and TypeScript to build your userscript for Tampermonkey and more extensions.
+[中文简介](./README-zh.md)
 
-Automatically generate headers from your package.json!
+A helper for private trackers.
 
 ## Usage
 
-### 1. Generate repostiory (two-ways)
+1. Install a userscript extension
+2. Install the script from [greasyfork](https://greasyfork.org/zh-CN/scripts/460549-pt-helper) or [github](https://github.com/amorphobia/pt-helper/raw/main/userscript/index.user.js)
 
-#### - Use this template to create your new repository
+## Highlighted features
 
-![](./images/github-use-template.png)
+### Automatically fold banner
 
-#### - Clone this repository
+![auto fold banner](https://s2.loli.net/2023/02/14/x7NEu96le5Bq4IV.gif)
 
-```bash
-# Use Github CLI
-$ gh repo clone pboymt/userscript-typescript-template
-# Or use 'git clone' command directly
-$ git clone https://github.com/pboymt/userscript-typescript-template.git
-```
+### Direct link
 
-### Development
+![tjupt-dl.gif](https://s2.loli.net/2023/02/17/JUtxICqRfHMN73y.gif)
+
+### Automatically say thanks
+
+![thanks.gif](https://s2.loli.net/2023/02/20/xRS1aX9eQfwuOtA.gif)
+
+## Development
 
 1. Install dependencies with `npm install` or `npm ci`.
 2. Edit settings in `userscript` object in [`package.json`](./package.json), you can refer to the comments in [`plugins/userscript.plugin.ts`](./plugins/userscript.plugin.ts).
@@ -29,18 +31,8 @@ $ git clone https://github.com/pboymt/userscript-typescript-template.git
 4. Generate userscript with `npm run build`.
 5. Import generated userscript to Tampermonkey by local file URI.
 
-### Compile other file types
+## License
 
-You need install other loader plugins to support other file types.
+The code of [template](https://github.com/pboymt/userscript-typescript-template) is licensed under [MIT](./template-LICENSE).
 
-For example, you can use `scss-loader` to compile `.scss` files. Install it with `npm install --save-dev scss-loader node-sass` and add it in [`webpack.config.ts`](./webpack.config.ts).
-
-### Debug
-
-Allow Tampermonkey's access to local file URIs ([Tampermonkey FAQs](https://tampermonkey.net/faq.php?ext=dhdg#Q204)) and import built userscript's file URL. 
-
-### Publish you userscript
-
-You can publish your userscript to [Greasy Fork](https://greasyfork.org/) or other websites.
-
-You can push your userscript to [Github](https://github.com) and import it to [Greasy Fork](https://greasyfork.org/import).
+The code of PT Helper is licensed under [AGPL-3.0](./LICENSE)-or-later.
