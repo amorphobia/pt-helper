@@ -14,7 +14,6 @@
 // @match *://nanyangpt.com/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://tjupt.org/*
-// @require https://cdn.jsdelivr.net/npm/axios@0.27.2
 // @grant GM_addStyle
 // @grant GM_registerMenuCommand
 // @grant GM_unregisterMenuCommand
