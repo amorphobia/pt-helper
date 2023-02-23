@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.2
+// @version 0.1.3
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -206,6 +206,9 @@ class NexusPHP extends common_1.Common {
             td.prepend(a);
         }
         this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
 h2#swal2-title {
     background-color: transparent;
     background-image: none;
@@ -4741,6 +4744,9 @@ table.mainouter {
             td.prepend(a);
         }
         this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
 h2#swal2-title {
     background-color: transparent;
     background-image: none;

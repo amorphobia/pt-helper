@@ -119,6 +119,9 @@ export class NexusPHP extends Common {
         }
 
         this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
 h2#swal2-title {
     background-color: transparent;
     background-image: none;
