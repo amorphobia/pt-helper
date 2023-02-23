@@ -14,7 +14,7 @@
 // @match *://nanyangpt.com/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://tjupt.org/*
-// @require https://cdn.jsdelivr.net/npm/sweetalert2@=11.4.8
+// @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
 // @grant GM_addStyle
 // @grant GM_registerMenuCommand
