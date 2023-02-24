@@ -115,7 +115,7 @@ export class Common {
     }
 
     protected wait(ms: number) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             setTimeout(resolve, ms);
         });
     }

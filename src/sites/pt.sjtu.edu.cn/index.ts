@@ -21,7 +21,7 @@ export class SJTU extends NexusPHP {
             const info_height = info?.clientHeight ? info.clientHeight + 5 : 30;
             this.css += `
 table.head {
-    display: none;
+    display: none !important;  /* set important for iOS safari */
 }
 
 table.mainouter {

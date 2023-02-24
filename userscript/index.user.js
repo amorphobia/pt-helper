@@ -360,7 +360,7 @@ class Common {
         this.registerMenu();
     }
     wait(ms) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             setTimeout(resolve, ms);
         });
     }
@@ -4754,7 +4754,7 @@ class SJTU extends index_1.NexusPHP {
             const info_height = (info === null || info === void 0 ? void 0 : info.clientHeight) ? info.clientHeight + 5 : 30;
             this.css += `
 table.head {
-    display: none;
+    display: none !important;  /* set important for iOS safari */
 }
 
 table.mainouter {
