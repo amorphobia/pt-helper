@@ -44,7 +44,7 @@
     "i18n-descriptions": [
       { "i18n": "zh-CN", "description": "私密种子站点的助手" }
     ],
-    "version": "0.1.6",
+    "version": "0.1.7",
     "author": "amorphobia",
     "homepage": "https://github.com/amorphobia/pt-helper",
     "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjU3MzdlIiBkPSJNNDA1LjMsMjk4LjdhMTA2LjUsMTA2LjUsMCwwLDAtODMuOSw0MC44bC0xMTEuNy01NS44YTEwNi44LDEwNi44LDAsMCwwLDAtNTUuM2wxMTEuNy01NmExMDYuMywxMDYuMywwLDEsMC0xOS0zOGwtMTExLjgsNTUuOGExMDYuNywxMDYuNywwLDEsMCwwLDEzMS42bDExMS43LDU1LjlhMTA2LjcsMTA2LjcsMCwxLDAsMTAzLTc5WiIvPjxjaXJjbGUgZmlsbD0iIzA1ZmZhMSIgY3g9IjQwNS4zIiBjeT0iMTA2LjciIHI9IjY0Ii8+PGNpcmNsZSBmaWxsPSIjNzFjN2VjIiBjeD0iNDA1LjMiIGN5PSI0MDUuMyIgcj0iNjQiLz48Y2lyY2xlIGZpbGw9IiNmZjUyNTIiIGN4PSIxMDYuNyIgY3k9IjI1NiIgcj0iNjQiLz48L3N2Zz4=",
