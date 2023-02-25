@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.5
+// @version 0.1.6
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -13,6 +13,7 @@
 // @match *://hhanclub.top/*
 // @match *://nanyangpt.com/*
 // @match *://pt.sjtu.edu.cn/*
+// @match *://pterclub.com/*
 // @match *://tjupt.org/*
 // @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
@@ -369,6 +370,20 @@ class Common {
     }
     setHostValue(id, value) {
         GM_setValue(this.host + "_" + id, value);
+    }
+    makeGetRequest(url) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: (response) => {
+                    resolve(response.responseText);
+                },
+                onerror: (error) => {
+                    reject(error);
+                }
+            });
+        });
     }
 }
 exports.Common = Common;
@@ -4773,6 +4788,61 @@ exports.SJTU = SJTU;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Pterclub = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+class Pterclub extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("pterclub.com");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": "隐藏横幅",
+                "name": "隐藏横幅",
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": "自动签到",
+                "name": "自动签到",
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}`;
+        }
+    }
+    onLoad() {
+        super.onLoad();
+        this.attendance();
+    }
+    attendance() {
+        if (!this.getHostValue("attendance")) {
+            return;
+        }
+        const span = document.querySelector("span#attendance-wrap");
+        if (span && (span.innerHTML.indexOf("已") >= 0 || (span.innerHTML.indexOf("got") >= 0))) {
+            return;
+        }
+        this.makeGetRequest("https://" + this.host + "/attendance-ajax.php").then(console.log, console.log);
+    }
+}
+exports.Pterclub = Pterclub;
+
+
+/***/ }),
+/* 9 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TJUPT = void 0;
 const index_1 = __webpack_require__(2);
 class TJUPT extends index_1.NexusPHP {
@@ -4925,12 +4995,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const hhanclub_top_1 = __webpack_require__(1);
 const nanyangpt_com_1 = __webpack_require__(6);
 const pt_sjtu_edu_cn_1 = __webpack_require__(7);
-const index_1 = __webpack_require__(8);
+const pterclub_com_1 = __webpack_require__(8);
+const index_1 = __webpack_require__(9);
 const host = window.location.host;
 const sites = new Map([
     ["hhanclub.top", new hhanclub_top_1.Hhanclub()],
     ["nanyangpt.com", new nanyangpt_com_1.NanyangPT()],
     ["pt.sjtu.edu.cn", new pt_sjtu_edu_cn_1.SJTU()],
+    ["pterclub.com", new pterclub_com_1.Pterclub()],
     ["tjupt.org", new index_1.TJUPT()]
 ]);
 const site = sites.get(host);

@@ -1,8 +1,7 @@
 import { NexusPHP } from "../../architectures/NexusPHP";
 
 export class Pterclub extends NexusPHP {
-    locale: string = "zh-CN";
-    constructor(locale: string) {
+    constructor() {
         super("pterclub.com");
 
         this.menu_items = [
@@ -21,8 +20,6 @@ export class Pterclub extends NexusPHP {
                 "value": true
             }
         ].concat(this.menu_items);
-
-        this.locale = locale;
     }
 
     protected tweakBanner(): void {
@@ -36,13 +33,18 @@ table.head {
 
     public onLoad(): void {
         super.onLoad();
+        this.attendance();
     }
 
     private attendance() {
         if (!this.getHostValue("attendance")) {
             return;
         }
-        const last_time = Date.parse(String(this.getHostValue("lastAttendanceTime")));
-        const last_date = isNaN(last_time) ? new Date("01 Jan 1970 00:00:00 GMT") : new Date(last_time);
+        const span = document.querySelector("span#attendance-wrap");
+        if (span && (span.innerHTML.indexOf("已") >= 0 || (span.innerHTML.indexOf("got") >= 0))) {
+            return;
+        }
+
+        this.makeGetRequest("https://" + this.host + "/attendance-ajax.php").then(console.log, console.log);
     }
 }
