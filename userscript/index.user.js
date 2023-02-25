@@ -4815,6 +4815,9 @@ class Pterclub extends NexusPHP_1.NexusPHP {
             this.css += `
 table.head {
     display: none;
+}
+table.mainouter {
+    margin-top: 20px;
 }`;
         }
     }

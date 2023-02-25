@@ -27,6 +27,9 @@ export class Pterclub extends NexusPHP {
             this.css += `
 table.head {
     display: none;
+}
+table.mainouter {
+    margin-top: 20px;
 }`;
         }
     }
