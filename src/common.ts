@@ -127,4 +127,19 @@ export class Common {
     protected setHostValue(id: string, value: string | number | boolean) {
         GM_setValue(this.host + "_" + id, value);
     }
+
+    protected makeGetRequest(url: string) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: (response) => {
+                    resolve(response.responseText);
+                },
+                onerror: (error) => {
+                    reject(error);
+                }
+            });
+        });
+    }
 }
