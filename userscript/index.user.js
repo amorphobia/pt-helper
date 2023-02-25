@@ -1,19 +1,20 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.5
+// @version 0.1.7
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
 // @author amorphobia
 // @homepage https://github.com/amorphobia/pt-helper
-// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjU3MzdlIiBkPSJNNDA1LjMsMjk4LjdhMTA2LjUsMTA2LjUsMCwwLDAtODMuOSw0MC44bC0xMTEuNy01NS44YTEwNi44LDEwNi44LDAsMCwwLDAtNTUuM2wxMTEuNy01NmExMDYuMywxMDYuMywwLDEsMC0xOS0zOGwtMTExLjgsNTUuOGExMDYuNywxMDYuNywwLDEsMCwwLDEzMS42bDExMS43LDU1LjlhMTA2LjcsMTA2LjcsMCwxLDAsMTAzLTc5WiIvPjxjaXJjbGUgZmlsbD0iIzA1ZmZhMSIgY3g9IjQwNS4zIiBjeT0iMTA2LjciIHI9IjY0Ii8+PGNpcmNsZSBmaWxsPSIjNzFjN2VjIiBjeD0iNDA1LjMiIGN5PSI0MDUuMyIgcj0iNjQiLz48Y2lyY2xlIGZpbGw9IiNmZjUyNTIiIGN4PSIxMDYuNyIgY3k9IjI1NiIgcj0iNjQiLz48L3N2Zz4=
+// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjc4IiBkPSJNMzIxLDM0MGwtMTEyLTU2YTEwNiwxMDYsMCwwLDAsMC01NmwxMTItNTZhMTA2LDEwNiwwLDEsMC0xOS0zOGwtMTEyLDU2YTEwNiwxMDYsMCwxLDAsMCwxMzJsMTEyLDU2YTEwNiwxMDYsMCwxLDAsMTktMzgiLz48Y2lyY2xlIGZpbGw9IiMwZjkiIGN4PSI0MDUiIGN5PSIxMDYiIHI9IjY1Ii8+PGNpcmNsZSBmaWxsPSIjN2NlIiBjeD0iNDA1IiBjeT0iNDA1IiByPSI2NSIvPjxjaXJjbGUgZmlsbD0iI2Y1NSIgY3g9IjEwNiIgY3k9IjI1NiIgcj0iNjUiLz48L3N2Zz4=
 // @supportURL https://github.com/amorphobia/pt-helper/issues
 // @license AGPL-3.0-or-later
 // @match *://dicmusic.club/*
 // @match *://hhanclub.top/*
 // @match *://nanyangpt.com/*
 // @match *://pt.sjtu.edu.cn/*
+// @match *://pterclub.com/*
 // @match *://tjupt.org/*
 // @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
@@ -4984,6 +4985,105 @@ exports.SJTU = SJTU;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Pterclub = void 0;
+const NexusPHP_1 = __webpack_require__(5);
+class Pterclub extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("pterclub.com");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": "隐藏横幅",
+                "name": "隐藏横幅",
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": "自动签到",
+                "name": "自动签到",
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
+    onLoad() {
+        super.onLoad();
+        this.attendance();
+    }
+    addDirectLink() {
+        if (!this.getHostValue("directLink") || this.passkey == "") {
+            return;
+        }
+        const id_re = /id=\d+/;
+        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
+        for (const tr of trs) {
+            const tds = tr.querySelectorAll("td");
+            if (!tds || tds.length < 5) {
+                continue;
+            }
+            const dl = tds[3].querySelector("a");
+            const direct_link = dl ? dl.href : "";
+            if (direct_link == "") {
+                continue;
+            }
+            const img = document.createElement("img");
+            img.setAttribute("src", "pic/trans.gif");
+            img.setAttribute("class", "torrent_direct_link");
+            img.setAttribute("alt", "DL");
+            const a = document.createElement("a");
+            a.setAttribute("title", "左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！");
+            a.setAttribute("onclick", "return false");
+            a.setAttribute("id", "direct_link");
+            a.setAttribute("href", direct_link);
+            a.setAttribute("data-clipboard-text", direct_link);
+            a.appendChild(img);
+            tds[4].prepend(a);
+        }
+        this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+img.torrent_direct_link {
+    width: 16px;
+    height: 16px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAH5QTFRFR3BMyKN4cz0Td3d3sLCw6enp////qHg4oaGhcz0TlpaWkV8opnU2lmQrjVklqHg4m2kvo3I03ruJiFMhn24y4r+N2raG5cSP9+jQg04e1rKD68uUnYpv6ceS0q5/fkkaoaGhzqp8h4eHr6+v+Pj4ekQXdkAV+/v78fHxy6Z6f0p3WgAAAAp0Uk5TAP///////5aWlrne7esAAACHSURBVBjTbc5HEsIwEERRA5qxLeecc77/BTEN0oq/m1ddKhnG36xxtPRhBq2UxyFlG5gAt5zXk+hc59IFRM3yQksTAdKOf3UpICxYCEFEXIQAL2NCnHkAJ/4s7jh2AH6uFrkPSOrvgrhOAFWvFn0FGCYWhDemAbBd6h/XBtgfuh1gP3X2fb4BlrkIUt3i2kgAAAAASUVORK5CYII=');
+    padding-bottom: 1px;
+}`;
+        this.registerClipboard("#direct_link");
+    }
+    attendance() {
+        if (!this.getHostValue("attendance")) {
+            return;
+        }
+        const span = document.querySelector("span#attendance-wrap");
+        if (span && (span.innerHTML.indexOf("已") >= 0 || (span.innerHTML.indexOf("got") >= 0))) {
+            return;
+        }
+        this.makeGetRequest("https://" + this.host + "/attendance-ajax.php").then(console.log, console.log);
+    }
+}
+exports.Pterclub = Pterclub;
+
+
+/***/ }),
+/* 11 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TJUPT = void 0;
 const index_1 = __webpack_require__(5);
 class TJUPT extends index_1.NexusPHP {
@@ -5137,13 +5237,15 @@ const dicmusic_club_1 = __webpack_require__(1);
 const hhanclub_top_1 = __webpack_require__(4);
 const nanyangpt_com_1 = __webpack_require__(8);
 const pt_sjtu_edu_cn_1 = __webpack_require__(9);
-const index_1 = __webpack_require__(10);
+const pterclub_com_1 = __webpack_require__(10);
+const index_1 = __webpack_require__(11);
 const host = window.location.host;
 const sites = new Map([
     ["dicmusic.club", new dicmusic_club_1.Dicmusic()],
     ["hhanclub.top", new hhanclub_top_1.Hhanclub()],
     ["nanyangpt.com", new nanyangpt_com_1.NanyangPT()],
     ["pt.sjtu.edu.cn", new pt_sjtu_edu_cn_1.SJTU()],
+    ["pterclub.com", new pterclub_com_1.Pterclub()],
     ["tjupt.org", new index_1.TJUPT()]
 ]);
 const site = sites.get(host);
