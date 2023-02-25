@@ -69,7 +69,7 @@ class Gazelle extends common_1.Common {
     constructor(host, jsonAPI) {
         super(host);
         this.jsonAPI = true;
-        this.snatched = [];
+        this.snatched = new Set();
         this.uploaded = [];
         this.leeching = [];
         this.seeding = [];
@@ -91,10 +91,7 @@ class Gazelle extends common_1.Common {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const data = this.getHostValue("userInfo");
-            let info = "";
-            if (data) {
-                info = String(data);
-            }
+            const info = data ? String(data) : "";
             try {
                 this.userInfo = JSON.parse(info);
             }
@@ -128,10 +125,7 @@ class Gazelle extends common_1.Common {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const data = this.getHostValue("userExtendedInfo");
-            let info = "";
-            if (data) {
-                info = String(data);
-            }
+            const info = data ? String(data) : "";
             try {
                 this.userExtendedInfo = JSON.parse(info);
             }
@@ -140,11 +134,7 @@ class Gazelle extends common_1.Common {
                 return Promise.resolve();
             }
             const id = (_c = (_b = this.userInfo) === null || _b === void 0 ? void 0 : _b.response) === null || _c === void 0 ? void 0 : _c.id;
-            if (id == undefined) {
-                console.log("User extanded info: id not found.");
-                return Promise.reject();
-            }
-            const url = "https://" + this.host + `/ajax.php?action=user&id=${id}`;
+            const url = id != undefined ? "https://" + this.host + `/ajax.php?action=user&id=${id}` : "";
             return new Promise((_resolve, reject) => {
                 this.makeGetRequest(url).then((response) => {
                     let info;
@@ -167,6 +157,70 @@ class Gazelle extends common_1.Common {
         });
     }
     fetchSnatched() {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = this.getHostValue("snatched");
+            const info = data ? String(data) : "";
+            try {
+                this.snatched = JSON.parse(info);
+            }
+            catch (error) { }
+            const id = (_b = (_a = this.userInfo) === null || _a === void 0 ? void 0 : _a.response) === null || _b === void 0 ? void 0 : _b.id;
+            const url = id != undefined ? "https://" + this.host + `/torrents.php?type=snatched&userid=${id}` : "";
+            (new Promise(() => {
+                this.makeGetRequest(url).then((response) => {
+                    console.log(response);
+                    const container = document.implementation.createHTMLDocument().documentElement;
+                    container.innerHTML = String(response);
+                    let lastPage = 1;
+                    const last = container.querySelector("#content .linkbox > a:last-of-type");
+                    if (!last) {
+                        return Promise.resolve();
+                    }
+                    const anchor = last;
+                    const p_re = /page=(\d+)/;
+                    const result = p_re.exec(anchor.href);
+                    if (result) {
+                        lastPage = Number(result[1]);
+                        if (lastPage <= 0) {
+                            lastPage = 1;
+                        }
+                    }
+                    let scanned = this.scanTorrents(container);
+                    for (let page = 2; page <= lastPage; page++) {
+                    }
+                });
+            })).then();
+        });
+    }
+    scanTorrents(doc) {
+        const table = doc.querySelector("#content > .thin > table");
+        if (!table) {
+            return {
+                groups: new Set(),
+                torrents: new Set()
+            };
+        }
+        const links = table.querySelectorAll("div.group_info > a.tooltip");
+        if (!links) {
+            return {
+                groups: new Set(),
+                torrents: new Set()
+            };
+        }
+        let groups = new Set();
+        let torrents = new Set();
+        for (const link of links) {
+            const href = link.href;
+            const re = /id=(\d+)&torrentid=(\d+)/;
+            const result = re.exec(href);
+            if (!result) {
+                continue;
+            }
+            groups.add(Number(result[1]));
+            torrents.add(Number(result[2]));
+        }
+        return { groups: groups, torrents: torrents };
     }
 }
 exports.Gazelle = Gazelle;
