@@ -128,8 +128,8 @@ export class Common {
         GM_setValue(this.host + "_" + id, value);
     }
 
-    protected makeGetRequest(url: string) {
-        return new Promise((resolve, reject) => {
+    protected makeGetRequest(url: string): Promise<string> {
+        return new Promise((resolve: (_: string) => void, reject) => {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: url,

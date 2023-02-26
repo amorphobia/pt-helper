@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.7
+// @version 0.1.8
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
 // @author amorphobia
 // @homepage https://github.com/amorphobia/pt-helper
-// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjU3MzdlIiBkPSJNNDA1LjMsMjk4LjdhMTA2LjUsMTA2LjUsMCwwLDAtODMuOSw0MC44bC0xMTEuNy01NS44YTEwNi44LDEwNi44LDAsMCwwLDAtNTUuM2wxMTEuNy01NmExMDYuMywxMDYuMywwLDEsMC0xOS0zOGwtMTExLjgsNTUuOGExMDYuNywxMDYuNywwLDEsMCwwLDEzMS42bDExMS43LDU1LjlhMTA2LjcsMTA2LjcsMCwxLDAsMTAzLTc5WiIvPjxjaXJjbGUgZmlsbD0iIzA1ZmZhMSIgY3g9IjQwNS4zIiBjeT0iMTA2LjciIHI9IjY0Ii8+PGNpcmNsZSBmaWxsPSIjNzFjN2VjIiBjeD0iNDA1LjMiIGN5PSI0MDUuMyIgcj0iNjQiLz48Y2lyY2xlIGZpbGw9IiNmZjUyNTIiIGN4PSIxMDYuNyIgY3k9IjI1NiIgcj0iNjQiLz48L3N2Zz4=
+// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjc4IiBkPSJNMzIxLDM0MGwtMTEyLTU2YTEwNiwxMDYsMCwwLDAsMC01NmwxMTItNTZhMTA2LDEwNiwwLDEsMC0xOS0zOGwtMTEyLDU2YTEwNiwxMDYsMCwxLDAsMCwxMzJsMTEyLDU2YTEwNiwxMDYsMCwxLDAsMTktMzgiLz48Y2lyY2xlIGZpbGw9IiMwZjkiIGN4PSI0MDUiIGN5PSIxMDYiIHI9IjY1Ii8+PGNpcmNsZSBmaWxsPSIjN2NlIiBjeD0iNDA1IiBjeT0iNDA1IiByPSI2NSIvPjxjaXJjbGUgZmlsbD0iI2Y1NSIgY3g9IjEwNiIgY3k9IjI1NiIgcj0iNjUiLz48L3N2Zz4=
 // @supportURL https://github.com/amorphobia/pt-helper/issues
 // @license AGPL-3.0-or-later
 // @match *://hhanclub.top/*
@@ -141,33 +141,18 @@ class NexusPHP extends common_1.Common {
             return;
         }
         const cp_url = "https://" + this.host + "/usercp.php";
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: cp_url,
-            onload: (response) => {
-                if (response.status != 200) {
-                    console.log("Failed to get passkey.");
+        this.makeGetRequest(cp_url).then((responseText) => {
+            const container = document.implementation.createHTMLDocument().documentElement;
+            container.innerHTML = responseText;
+            const re = /[\w\d]{32}/;
+            const tds = container.querySelectorAll("td.rowfollow");
+            for (const td of tds) {
+                const result = re.exec(td.innerText);
+                if (result) {
+                    this.setHostValue("passkey", result[0]);
+                    this.passkey = result[0];
                     return;
                 }
-                const container = document.implementation.createHTMLDocument().documentElement;
-                container.innerHTML = response.responseText;
-                const tds = container.querySelectorAll("td.rowfollow");
-                for (const td of tds) {
-                    const tc = td;
-                    const re = /[\w\d]{32}/;
-                    const result = re.exec(tc.innerText);
-                    if (result) {
-                        this.setHostValue("passkey", result[0]);
-                        this.passkey = result[0];
-                        return;
-                    }
-                }
-            },
-            onabort: () => {
-                console.log("Abort to get passkey");
-            },
-            onerror: () => {
-                console.log("Error to get passkey");
             }
         });
     }
@@ -181,7 +166,7 @@ class NexusPHP extends common_1.Common {
             if (input && !input.disabled) {
                 input.click();
             }
-        }).catch(() => { console.log("Failed to say thanks."); });
+        }).catch(() => { console.error("Failed to say thanks."); });
     }
     addDirectLink() {
         var _a;

@@ -45,35 +45,19 @@ export class NexusPHP extends Common {
         }
 
         const cp_url = "https://" + this.host + "/usercp.php";
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: cp_url,
-            onload: (response) => {
-                if (response.status != 200) {
-                    console.log("Failed to get passkey.");
+        this.makeGetRequest(cp_url).then((responseText) => {
+            const container = document.implementation.createHTMLDocument().documentElement;
+            container.innerHTML = responseText;
+
+            const re = /[\w\d]{32}/;
+            const tds = container.querySelectorAll("td.rowfollow") as NodeListOf<HTMLTableCellElement>;
+            for (const td of tds) {
+                const result = re.exec(td.innerText);
+                if (result) {
+                    this.setHostValue("passkey", result[0]);
+                    this.passkey = result[0];
                     return;
                 }
-
-                const container = document.implementation.createHTMLDocument().documentElement;
-                container.innerHTML = response.responseText;
-
-                const tds = container.querySelectorAll("td.rowfollow");
-                for (const td of tds) {
-                    const tc = td as HTMLTableCellElement;
-                    const re = /[\w\d]{32}/;
-                    const result = re.exec(tc.innerText);
-                    if (result) {
-                        this.setHostValue("passkey", result[0]);
-                        this.passkey = result[0];
-                        return;
-                    }
-                }
-            },
-            onabort: () => {
-                console.log("Abort to get passkey");
-            },
-            onerror: () => {
-                console.log("Error to get passkey");
             }
         });
     }
@@ -89,7 +73,7 @@ export class NexusPHP extends Common {
             if (input && !input.disabled) {
                 input.click();
             }
-        }).catch(() => { console.log("Failed to say thanks."); });
+        }).catch(() => { console.error("Failed to say thanks."); });
     }
 
     protected addDirectLink() {
