@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.7
+// @version 0.2.0
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -75,18 +75,24 @@ class Gazelle extends common_1.Common {
         this.leeching = [];
         this.seeding = [];
         this.perfectFLACs = [];
-        this.uniqueGroups = [];
+        this.uniqueGroups = new Set();
         this.jsonAPI = jsonAPI;
     }
     onLoad() {
         super.onLoad();
         (() => __awaiter(this, void 0, void 0, function* () {
-            if (this.jsonAPI) {
-                yield this.fetchUserInfoJSON();
-                yield this.fetchUserExtendedInfoJSON();
+            try {
+                if (this.jsonAPI) {
+                    console.log("b4 info");
+                    yield this.fetchUserInfoJSON().then(console.log, console.error);
+                    console.log("after info");
+                    console.log(this.userInfo);
+                }
+            }
+            catch (err) {
+                console.error(err);
             }
         }))();
-        this.fetchSnatched();
     }
     fetchUserInfoJSON() {
         var _a;
@@ -127,15 +133,20 @@ class Gazelle extends common_1.Common {
         return __awaiter(this, void 0, void 0, function* () {
             const data = this.getHostValue("userExtendedInfo");
             const info = data ? String(data) : "";
+            console.log("info: " + info);
             try {
                 this.userExtendedInfo = JSON.parse(info);
             }
-            catch (error) { }
+            catch (error) {
+                console.error(error);
+            }
             if (((_a = this.userExtendedInfo) === null || _a === void 0 ? void 0 : _a.status) == "success") {
                 return Promise.resolve();
             }
             const id = (_c = (_b = this.userInfo) === null || _b === void 0 ? void 0 : _b.response) === null || _c === void 0 ? void 0 : _c.id;
+            console.log(id);
             const url = id != undefined ? "https://" + this.host + `/ajax.php?action=user&id=${id}` : "";
+            console.log("ext info url: " + url);
             return new Promise((_resolve, reject) => {
                 this.makeGetRequest(url).then((response) => {
                     let info;
@@ -168,9 +179,8 @@ class Gazelle extends common_1.Common {
             catch (error) { }
             const id = (_b = (_a = this.userInfo) === null || _a === void 0 ? void 0 : _a.response) === null || _b === void 0 ? void 0 : _b.id;
             const url = id != undefined ? "https://" + this.host + `/torrents.php?type=snatched&userid=${id}` : "";
-            (new Promise(() => {
-                this.makeGetRequest(url).then((response) => {
-                    console.log(response);
+            return (new Promise(() => {
+                this.makeGetRequest(url).then((response) => __awaiter(this, void 0, void 0, function* () {
                     const container = document.implementation.createHTMLDocument().documentElement;
                     container.innerHTML = String(response);
                     let lastPage = 1;
@@ -189,9 +199,24 @@ class Gazelle extends common_1.Common {
                     }
                     let scanned = this.scanTorrents(container);
                     for (let page = 2; page <= lastPage; page++) {
+                        const page_url = url + `&page=${page}`;
+                        console.log(page_url);
+                        yield this.makeGetRequest(page_url).then((resp) => {
+                            const page_container = document.implementation.createHTMLDocument().documentElement;
+                            page_container.innerHTML = String(resp);
+                            let scanned_page = this.scanTorrents(page_container);
+                            scanned.groups = new Set([...scanned.groups, ...scanned_page.groups]);
+                            scanned.torrents = new Set([...scanned.torrents, ...scanned_page.torrents]);
+                        });
                     }
-                });
-            })).then();
+                    this.snatched = new Set([...this.snatched, ...scanned.torrents]);
+                    this.uniqueGroups = new Set([...this.uniqueGroups, ...scanned.groups]);
+                    console.log("this snatched: ");
+                    console.log(this.snatched);
+                    console.log("this groups: ");
+                    console.log(this.uniqueGroups);
+                }));
+            }));
         });
     }
     scanTorrents(doc) {
@@ -211,9 +236,9 @@ class Gazelle extends common_1.Common {
         }
         let groups = new Set();
         let torrents = new Set();
+        const re = /id=(\d+)&torrentid=(\d+)/;
         for (const link of links) {
             const href = link.href;
-            const re = /id=(\d+)&torrentid=(\d+)/;
             const result = re.exec(href);
             if (!result) {
                 continue;

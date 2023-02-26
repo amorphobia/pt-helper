@@ -10,7 +10,7 @@ export class Gazelle extends Common {
     leeching: number[] = [];
     seeding: number[] = [];
     perfectFLACs: number[] = [];
-    uniqueGroups: number[] = [];
+    uniqueGroups = new Set<number>();
 
     constructor(host: string, jsonAPI: boolean) {
         super(host);
@@ -20,15 +20,22 @@ export class Gazelle extends Common {
     public onLoad(): void {
         super.onLoad();
         (async () => {
-            if (this.jsonAPI) {
-                await this.fetchUserInfoJSON();
-                await this.fetchUserExtendedInfoJSON();
+            try {
+                if (this.jsonAPI) {
+                    console.log("b4 info");
+                    await this.fetchUserInfoJSON().then(console.log, console.error);
+                    console.log("after info");
+                    console.log(this.userInfo);
+                    // await this.fetchUserExtendedInfoJSON();
+                }
+                // await this.fetchSnatched();
+            } catch (err) {
+                console.error(err);
             }
         })();
-        this.fetchSnatched();
     }
 
-    protected async fetchUserInfoJSON() {
+    protected async fetchUserInfoJSON(): Promise<void> {
         const data = this.getHostValue("userInfo");
         const info = data ? String(data) : "";
 
@@ -62,19 +69,22 @@ export class Gazelle extends Common {
         });
     }
 
-    protected async fetchUserExtendedInfoJSON() {
+    protected async fetchUserExtendedInfoJSON(): Promise<void> {
         const data = this.getHostValue("userExtendedInfo");
         const info = data ? String(data) : "";
+        console.log("info: " + info);
 
         try {
             this.userExtendedInfo = JSON.parse(info);
-        } catch (error) {}
+        } catch (error) { console.error(error); }
         if (this.userExtendedInfo?.status == "success") {
             return Promise.resolve();
         }
 
         const id = this.userInfo?.response?.id;
+        console.log(id);
         const url = id != undefined ? "https://" + this.host + `/ajax.php?action=user&id=${id}` : "";
+        console.log("ext info url: " + url);
         return new Promise((_resolve, reject) => {
             this.makeGetRequest(url).then((response) => {
                 let info: UserExtendedInfo;
@@ -107,9 +117,8 @@ export class Gazelle extends Common {
 
         const id = this.userInfo?.response?.id;
         const url = id != undefined ? "https://" + this.host + `/torrents.php?type=snatched&userid=${id}` : "";
-        (new Promise(() => {
-            this.makeGetRequest(url).then((response) => {
-                console.log(response);
+        return (new Promise(() => {
+            this.makeGetRequest(url).then(async (response) => {
                 const container = document.implementation.createHTMLDocument().documentElement;
                 container.innerHTML = String(response);
 
@@ -124,20 +133,31 @@ export class Gazelle extends Common {
                     if (lastPage <= 0) { lastPage = 1; }
                 }
 
-                // const el = container.querySelector("#content > .thin > table");
-                // if (!el) { return Promise.resolve(); }
-
-                // scan this page
                 let scanned = this.scanTorrents(container);
 
                 for (let page = 2; page <= lastPage; page++) {
-                    // 
+                    const page_url = url + `&page=${page}`;
+                    console.log(page_url);
+                    await this.makeGetRequest(page_url).then((resp) => {
+                        const page_container = document.implementation.createHTMLDocument().documentElement;
+                        page_container.innerHTML = String(resp);
+                        let scanned_page = this.scanTorrents(page_container);
+                        scanned.groups = new Set([...scanned.groups, ...scanned_page.groups]);
+                        scanned.torrents = new Set([...scanned.torrents, ...scanned_page.torrents]);
+                    });
                 }
+
+                this.snatched = new Set([...this.snatched, ...scanned.torrents]);
+                this.uniqueGroups = new Set([...this.uniqueGroups, ...scanned.groups]);
+                console.log("this snatched: ");
+                console.log(this.snatched);
+                console.log("this groups: ");
+                console.log(this.uniqueGroups);
             });
-        })).then();
+        }));
     }
 
-    protected scanTorrents(doc: Element): {
+    protected scanTorrents(doc: HTMLElement): {
         groups: Set<number>,
         torrents: Set<number>
     } {
@@ -160,9 +180,9 @@ export class Gazelle extends Common {
         let groups = new Set<number>();
         let torrents = new Set<number>();
 
+        const re = /id=(\d+)&torrentid=(\d+)/;
         for (const link of links) {
             const href = (link as HTMLAnchorElement).href;
-            const re = /id=(\d+)&torrentid=(\d+)/;
             const result = re.exec(href);
             if (!result) { continue; }
 
