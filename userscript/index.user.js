@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.8
+// @version 0.1.9
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
 // @author amorphobia
 // @homepage https://github.com/amorphobia/pt-helper
-// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjc4IiBkPSJNMzIxLDM0MGwtMTEyLTU2YTEwNiwxMDYsMCwwLDAsMC01NmwxMTItNTZhMTA2LDEwNiwwLDEsMC0xOS0zOGwtMTEyLDU2YTEwNiwxMDYsMCwxLDAsMCwxMzJsMTEyLDU2YTEwNiwxMDYsMCwxLDAsMTktMzgiLz48Y2lyY2xlIGZpbGw9IiMwZjkiIGN4PSI0MDUiIGN5PSIxMDYiIHI9IjY1Ii8+PGNpcmNsZSBmaWxsPSIjN2NlIiBjeD0iNDA1IiBjeT0iNDA1IiByPSI2NSIvPjxjaXJjbGUgZmlsbD0iI2Y1NSIgY3g9IjEwNiIgY3k9IjI1NiIgcj0iNjUiLz48L3N2Zz4=
+// @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cGF0aCBmaWxsPSIjNjc4IiBkPSJNMTYwLDE3MGwtNTYtMjhhNTMsNTMsMCwwLDAsMC0yOGw1Ni0yOGE1Myw1MywwLDEsMC05LTE5bC01NiwyOGE1Myw1MywwLDEsMCwwLDY2bDU2LDI4YTUzLDUzLDAsMSwwLDktMTkiLz48Y2lyY2xlIGZpbGw9IiMwZjkiIGN4PSIyMDIiIGN5PSI1MyIgcj0iMzMiLz48Y2lyY2xlIGZpbGw9IiM3Y2UiIGN4PSIyMDIiIGN5PSIyMDIiIHI9IjMzIi8+PGNpcmNsZSBmaWxsPSIjZjU1IiBjeD0iNTMiIGN5PSIxMjgiIHI9IjMzIi8+PC9zdmc+
 // @supportURL https://github.com/amorphobia/pt-helper/issues
 // @license AGPL-3.0-or-later
 // @match *://hhanclub.top/*
@@ -209,7 +209,7 @@ h2#swal2-title {
 img.torrent_direct_link {
     width: 16px;
     height: 16px;
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAH5QTFRFR3BMyKN4cz0Td3d3sLCw6enp////qHg4oaGhcz0TlpaWkV8opnU2lmQrjVklqHg4m2kvo3I03ruJiFMhn24y4r+N2raG5cSP9+jQg04e1rKD68uUnYpv6ceS0q5/fkkaoaGhzqp8h4eHr6+v+Pj4ekQXdkAV+/v78fHxy6Z6f0p3WgAAAAp0Uk5TAP///////5aWlrne7esAAACHSURBVBjTbc5HEsIwEERRA5qxLeecc77/BTEN0oq/m1ddKhnG36xxtPRhBq2UxyFlG5gAt5zXk+hc59IFRM3yQksTAdKOf3UpICxYCEFEXIQAL2NCnHkAJ/4s7jh2AH6uFrkPSOrvgrhOAFWvFn0FGCYWhDemAbBd6h/XBtgfuh1gP3X2fb4BlrkIUt3i2kgAAAAASUVORK5CYII=');
+    background: url('${common_1.direct_link_img_url}');
     padding-bottom: 1px;
 }`;
         this.registerClipboard("#direct_link");
@@ -250,9 +250,10 @@ exports.NexusPHP = NexusPHP;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Common = void 0;
+exports.Common = exports.direct_link_img_url = void 0;
 const helper_home = "https://github.com/amorphobia/pt-helper";
 const num_emoji = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
+exports.direct_link_img_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAH5QTFRFR3BMyKN4cz0Td3d3sLCw6enp////qHg4oaGhcz0TlpaWkV8opnU2lmQrjVklqHg4m2kvo3I03ruJiFMhn24y4r+N2raG5cSP9+jQg04e1rKD68uUnYpv6ceS0q5/fkkaoaGhzqp8h4eHr6+v+Pj4ekQXdkAV+/v78fHxy6Z6f0p3WgAAAAp0Uk5TAP///////5aWlrne7esAAACHSURBVBjTbc5HEsIwEERRA5qxLeecc77/BTEN0oq/m1ddKhnG36xxtPRhBq2UxyFlG5gAt5zXk+hc59IFRM3yQksTAdKOf3UpICxYCEFEXIQAL2NCnHkAJ/4s7jh2AH6uFrkPSOrvgrhOAFWvFn0FGCYWhDemAbBd6h/XBtgfuh1gP3X2fb4BlrkIUt3i2kgAAAAASUVORK5CYII=";
 class Common {
     constructor(host) {
         this.host = "";
@@ -4775,6 +4776,7 @@ exports.SJTU = SJTU;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Pterclub = void 0;
 const NexusPHP_1 = __webpack_require__(2);
+const common_1 = __webpack_require__(3);
 class Pterclub extends NexusPHP_1.NexusPHP {
     constructor() {
         super("pterclub.com");
@@ -4846,7 +4848,7 @@ table.mainouter {
 img.torrent_direct_link {
     width: 16px;
     height: 16px;
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAH5QTFRFR3BMyKN4cz0Td3d3sLCw6enp////qHg4oaGhcz0TlpaWkV8opnU2lmQrjVklqHg4m2kvo3I03ruJiFMhn24y4r+N2raG5cSP9+jQg04e1rKD68uUnYpv6ceS0q5/fkkaoaGhzqp8h4eHr6+v+Pj4ekQXdkAV+/v78fHxy6Z6f0p3WgAAAAp0Uk5TAP///////5aWlrne7esAAACHSURBVBjTbc5HEsIwEERRA5qxLeecc77/BTEN0oq/m1ddKhnG36xxtPRhBq2UxyFlG5gAt5zXk+hc59IFRM3yQksTAdKOf3UpICxYCEFEXIQAL2NCnHkAJ/4s7jh2AH6uFrkPSOrvgrhOAFWvFn0FGCYWhDemAbBd6h/XBtgfuh1gP3X2fb4BlrkIUt3i2kgAAAAASUVORK5CYII=');
+    background: url('${common_1.direct_link_img_url}');
     padding-bottom: 1px;
 }`;
         this.registerClipboard("#direct_link");
@@ -4855,11 +4857,12 @@ img.torrent_direct_link {
         if (!this.getHostValue("attendance")) {
             return;
         }
-        const span = document.querySelector("span#attendance-wrap");
-        if (span && (span.innerHTML.indexOf("已") >= 0 || (span.innerHTML.indexOf("got") >= 0))) {
-            return;
+        const do_attendance = document.querySelector("a#do-attendance");
+        if (do_attendance) {
+            this.wait(2000).then(() => {
+                do_attendance.click();
+            });
         }
-        this.makeGetRequest("https://" + this.host + "/attendance-ajax.php").then(console.log, console.log);
     }
 }
 exports.Pterclub = Pterclub;
