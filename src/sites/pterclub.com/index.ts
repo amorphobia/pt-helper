@@ -89,11 +89,11 @@ img.torrent_direct_link {
         if (!this.getHostValue("attendance")) {
             return;
         }
-        const span = document.querySelector("span#attendance-wrap");
-        if (span && (span.innerHTML.indexOf("已") >= 0 || (span.innerHTML.indexOf("got") >= 0))) {
-            return;
+        const do_attendance = document.querySelector("a#do-attendance");
+        if (do_attendance) {
+            this.wait(2000).then(() => {
+                (do_attendance as HTMLAnchorElement).click();
+            });
         }
-
-        this.makeGetRequest("https://" + this.host + "/attendance-ajax.php").then(console.log, console.log);
     }
 }
