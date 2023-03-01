@@ -1,4 +1,5 @@
 import { NexusPHP } from "../../architectures/NexusPHP/index";
+import { I18N } from "../../i18n/i18n";
 
 export class Hhanclub extends NexusPHP {
     constructor() {
@@ -8,15 +9,15 @@ export class Hhanclub extends NexusPHP {
             {
                 "id": "bannerFold",
                 "type": "switch",
-                "display": "自动折叠横幅（隐藏时折叠设置无效）",
-                "name": "自动折叠横幅",
+                "display": I18N[this.locale].bannerFold,
+                "name": I18N[this.locale].bannerFoldName,
                 "value": true
             },
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": "隐藏横幅（隐藏时折叠设置无效）",
-                "name": "隐藏横幅",
+                "display": I18N[this.locale].bannerHide,
+                "name": I18N[this.locale].bannerHideName,
                 "value": false
             }
         ].concat(this.menu_items);

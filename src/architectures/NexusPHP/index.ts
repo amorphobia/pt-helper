@@ -1,6 +1,7 @@
 import { Common, direct_link_img_url } from "../../common";
 import ClipboardJS from "clipboard";
 import Swal from "sweetalert2";
+import { I18N } from "../../i18n/i18n";
 
 export class NexusPHP extends Common {
     passkey: string = "";
@@ -11,15 +12,15 @@ export class NexusPHP extends Common {
             {
                 "id": "thanks",
                 "type": "switch",
-                "display": "自动说谢谢",
-                "name": "自动说谢谢",
+                "display": I18N[this.locale].thanks,
+                "name": I18N[this.locale].thanks,
                 "value": true
             },
             {
                 "id": "directLink",
                 "type": "switch",
-                "display": "种子直链按钮（左键点击按钮复制直链）",
-                "name": "种子直链",
+                "display": I18N[this.locale].directLink,
+                "name": I18N[this.locale].directLinkName,
                 "value": true
             }
         ].concat(this.menu_items);
@@ -98,7 +99,7 @@ export class NexusPHP extends Common {
             img.setAttribute("class", "torrent_direct_link");
             img.setAttribute("alt", "DL");
             const a = document.createElement("a");
-            a.setAttribute("title", "左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！");
+            a.setAttribute("title", I18N[this.locale].passkeyWarning);
             a.setAttribute("onclick", "return false");
             a.setAttribute("id", "direct_link");
             a.setAttribute("href", direct_link);
@@ -132,7 +133,7 @@ img.torrent_direct_link {
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "复制成功",
+                title: I18N[this.locale].copySuccess,
                 showConfirmButton: false,
                 timer: 2500,
                 toast: true
@@ -141,8 +142,8 @@ img.torrent_direct_link {
         clip.on("error", err => {
             Swal.fire({
                 icon: "error",
-                title: "复制失败",
-                html: `请手动复制<br><input id="cb-input" style="width: 80%" value="${err.text}">`,
+                title: I18N[this.locale].copyError,
+                html: `${I18N[this.locale].copyByHand}<br><input id="cb-input" style="width: 80%" value="${err.text}">`,
                 didOpen: () => {
                     document.getElementById("cb-input")?.focus();
                 }

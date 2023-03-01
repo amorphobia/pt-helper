@@ -1,5 +1,6 @@
 import { NexusPHP } from "../../architectures/NexusPHP";
 import { direct_link_img_url } from "../../common";
+import { I18N } from "../../i18n/i18n";
 
 export class Pterclub extends NexusPHP {
     constructor() {
@@ -9,15 +10,15 @@ export class Pterclub extends NexusPHP {
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": "隐藏横幅",
-                "name": "隐藏横幅",
+                "display": I18N[this.locale].bannerHideName,
+                "name": I18N[this.locale].bannerHideName,
                 "value": false
             },
             {
                 "id": "attendance",
                 "type": "switch",
-                "display": "自动签到",
-                "name": "自动签到",
+                "display": I18N[this.locale].attendance,
+                "name": I18N[this.locale].attendance,
                 "value": true
             }
         ].concat(this.menu_items);
@@ -62,7 +63,7 @@ table.mainouter {
             img.setAttribute("class", "torrent_direct_link");
             img.setAttribute("alt", "DL");
             const a = document.createElement("a");
-            a.setAttribute("title", "左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！");
+            a.setAttribute("title", I18N[this.locale].passkeyWarning);
             a.setAttribute("onclick", "return false");
             a.setAttribute("id", "direct_link");
             a.setAttribute("href", direct_link);

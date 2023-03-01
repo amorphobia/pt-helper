@@ -1,4 +1,5 @@
 import { NexusPHP } from "../../architectures/NexusPHP/index";
+import { I18N } from "../../i18n/i18n";
 
 export class TJUPT extends NexusPHP {
     constructor() {
@@ -8,33 +9,33 @@ export class TJUPT extends NexusPHP {
             {
                 "id": "bannerFold",
                 "type": "switch",
-                "display": "自动折叠横幅（隐藏时折叠设置无效）",
-                "name": "自动折叠横幅",
+                "display": I18N[this.locale].bannerFold,
+                "name": I18N[this.locale].bannerFoldName,
                 "value": true
             },
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": "隐藏横幅（隐藏时折叠设置无效）",
-                "name": "隐藏横幅",
+                "display": I18N[this.locale].bannerHide,
+                "name": I18N[this.locale].bannerHideName,
                 "value": false
             },
             {
                 "id": "stickyHide",
                 "type": "selection",
                 "display": [
-                    "显示所有置顶",
-                    "隐藏一重置顶",
-                    "隐藏一、二重置顶",
-                    "隐藏所有置顶"
+                    I18N[this.locale].showAllSticky,
+                    I18N[this.locale].hideSingleSticky,
+                    I18N[this.locale].hideSingleDoubleSticky,
+                    I18N[this.locale].hideAllSticky
                 ],
                 "value": 0
             },
             {
                 "id": "colorBlind",
                 "type": "switch",
-                "display": "色盲模式",
-                "name": "色盲模式",
+                "display": I18N[this.locale].colorBlind,
+                "name": I18N[this.locale].colorBlind,
                 "value": false
             }
         ].concat(this.menu_items);

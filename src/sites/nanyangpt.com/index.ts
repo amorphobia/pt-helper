@@ -1,4 +1,5 @@
 import { NexusPHP } from "../../architectures/NexusPHP";
+import { I18N } from "../../i18n/i18n";
 
 export class NanyangPT extends NexusPHP {
     constructor() {
@@ -8,8 +9,8 @@ export class NanyangPT extends NexusPHP {
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": "隐藏横幅",
-                "name": "隐藏横幅",
+                "display": I18N[this.locale].bannerHideName,
+                "name": I18N[this.locale].bannerHideName,
                 "value": false
             }
         ].concat(this.menu_items);

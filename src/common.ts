@@ -1,20 +1,37 @@
+import { I18N } from "./i18n/i18n";
+
 const helper_home = "https://github.com/amorphobia/pt-helper";
 const num_emoji = ["0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"];
 export const direct_link_img_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAH5QTFRFR3BMyKN4cz0Td3d3sLCw6enp////qHg4oaGhcz0TlpaWkV8opnU2lmQrjVklqHg4m2kvo3I03ruJiFMhn24y4r+N2raG5cSP9+jQg04e1rKD68uUnYpv6ceS0q5/fkkaoaGhzqp8h4eHr6+v+Pj4ekQXdkAV+/v78fHxy6Z6f0p3WgAAAAp0Uk5TAP///////5aWlrne7esAAACHSURBVBjTbc5HEsIwEERRA5qxLeecc77/BTEN0oq/m1ddKhnG36xxtPRhBq2UxyFlG5gAt5zXk+hc59IFRM3yQksTAdKOf3UpICxYCEFEXIQAL2NCnHkAJ/4s7jh2AH6uFrkPSOrvgrhOAFWvFn0FGCYWhDemAbBd6h/XBtgfuh1gP3X2fb4BlrkIUt3i2kgAAAAASUVORK5CYII=";
+const impl_localse = new Map<string, string>([
+    ["en", "en"],
+    ["zh", "zh-CN"],
+    ["zh-CN", "zh-CN"],
+    ["zh-Hans", "zh-CN"],
+]);
 
 export class Common {
     host: string = "";
-    menu_items: any[] = [{
-        "id": "feedback",
-        "type": "link",
-        "display": "💬反馈与建议",
-        "value": helper_home + "/issues"
-    }];
+    locale: string = "en";
+    menu_items: any[];
     registered_items: any[];
     css: string;
 
     constructor(host: string) {
         this.host = host;
+        for (const locale of navigator.languages) {
+            const mapped_locale = impl_localse.get(locale);
+            if (mapped_locale) {
+                this.locale = mapped_locale;
+                break;
+            }
+        }
+        this.menu_items = [{
+            "id": "feedback",
+            "type": "link",
+            "display": I18N[this.locale].feedback,
+            "value": helper_home + "/issues"
+        }];
         this.registered_items = [];
         this.css = "";
     }
@@ -94,10 +111,10 @@ export class Common {
     }
 
     private toggleSwitch(item: any) {
-        const status = item.value ? "关闭" : "开启";
+        const status = item.value ? I18N[this.locale].turnOff : I18N[this.locale].turnOn;
         GM_setValue(item.id, !item.value);
         GM_notification({
-            text: `已${status}「${item.name}」\n（点击刷新网页后生效）`,
+            text: `${status}「${item.name}」\n${I18N[this.locale].reloadTakeEffect}`,
             timeout: 3500,
             onclick: () => { location.reload(); }
         });
@@ -108,7 +125,7 @@ export class Common {
         const new_value = (item.value + 1) % item.display.length;
         GM_setValue(item.id, new_value);
         GM_notification({
-            text: `切换为「${item.display[new_value]}」\n（点击刷新网页后生效）`,
+            text: `${I18N[this.locale].changeTo}「${item.display[new_value]}」\n${I18N[this.locale].reloadTakeEffect}`,
             timeout: 3500,
             onclick: () => { location.reload(); }
         });
