@@ -55,7 +55,8 @@
       "*://nanyangpt.com/*",
       "*://pt.sjtu.edu.cn/*",
       "*://pterclub.com/*",
-      "*://tjupt.org/*"
+      "*://tjupt.org/*",
+      "*://www.hdarea.co/*"
     ],
     "connect": [],
     "require": [],

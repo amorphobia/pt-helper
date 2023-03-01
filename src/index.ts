@@ -3,6 +3,7 @@ import { NanyangPT } from "./sites/nanyangpt.com";
 import { SJTU } from "./sites/pt.sjtu.edu.cn";
 import { Pterclub } from "./sites/pterclub.com";
 import { TJUPT } from "./sites/tjupt.org/index";
+import { HDarea } from "./sites/www.hdarea.co";
 
 const host = window.location.host;
 const sites = new Map<string, any>([
@@ -10,7 +11,8 @@ const sites = new Map<string, any>([
     ["nanyangpt.com", new NanyangPT()],
     ["pt.sjtu.edu.cn", new SJTU()],
     ["pterclub.com", new Pterclub()],
-    ["tjupt.org", new TJUPT()]
+    ["tjupt.org", new TJUPT()],
+    ["www.hdarea.co", new HDarea()],
 ]);
 const site = sites.get(host);
 
