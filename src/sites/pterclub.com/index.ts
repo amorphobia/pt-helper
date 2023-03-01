@@ -41,7 +41,7 @@ table.mainouter {
     }
 
     protected addDirectLink(): void {
-        if (!this.getHostValue("directLink") || this.passkey == "") {
+        if (!this.getHostValue("directLink")) {
             return;
         }
 
