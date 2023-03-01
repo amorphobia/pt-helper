@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import { NexusPHP } from "../../architectures/NexusPHP";
 import { direct_link_img_url } from "../../common";
 
@@ -96,6 +97,21 @@ img.torrent_direct_link {
         }
         const attend = document.querySelector("span#sign_in > a");
         if (attend) {
+            const anchor = attend as HTMLAnchorElement;
+            anchor.onclick = () => {
+                this.makeGetRequest("https://" + this.host + "/sign_in.php?action=sign_in").then((text) => {
+                    const icon = text.indexOf("重复") === -1 ? "success" : "info";
+                    Swal.fire({
+                        position: "top",
+                        icon: `${icon}`,
+                        title: `${text}`,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        toast: true
+                    });
+                });
+                return false;
+            };
             this.wait(2000).then(() => {
                 (attend as HTMLAnchorElement).click();
             });
