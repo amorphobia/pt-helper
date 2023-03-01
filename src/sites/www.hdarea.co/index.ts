@@ -100,7 +100,8 @@ img.torrent_direct_link {
             const anchor = attend as HTMLAnchorElement;
             anchor.onclick = () => {
                 this.makeGetRequest("https://" + this.host + "/sign_in.php?action=sign_in").then((text) => {
-                    const icon = text.indexOf("重复") === -1 ? "success" : "info";
+                    const repeat = text.indexOf("重") >= 0 || text.indexOf("repeat") >= 0;
+                    const icon = repeat ? "info" : "success";
                     Swal.fire({
                         position: "top",
                         icon: `${icon}`,
