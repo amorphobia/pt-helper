@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.10
+// @version 0.1.11
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -4991,12 +4991,16 @@ exports.TJUPT = TJUPT;
 
 /***/ }),
 /* 10 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HDarea = void 0;
+const sweetalert2_1 = __importDefault(__webpack_require__(5));
 const NexusPHP_1 = __webpack_require__(2);
 const common_1 = __webpack_require__(3);
 class HDarea extends NexusPHP_1.NexusPHP {
@@ -5086,6 +5090,21 @@ img.torrent_direct_link {
         }
         const attend = document.querySelector("span#sign_in > a");
         if (attend) {
+            const anchor = attend;
+            anchor.onclick = () => {
+                this.makeGetRequest("https://" + this.host + "/sign_in.php?action=sign_in").then((text) => {
+                    const icon = text.indexOf("重复") === -1 ? "success" : "info";
+                    sweetalert2_1.default.fire({
+                        position: "top",
+                        icon: `${icon}`,
+                        title: `${text}`,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        toast: true
+                    });
+                });
+                return false;
+            };
             this.wait(2000).then(() => {
                 attend.click();
             });
