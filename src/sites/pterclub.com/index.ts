@@ -45,7 +45,6 @@ table.mainouter {
             return;
         }
 
-        const id_re = /id=\d+/;
         const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
 
         for (const tr of trs) {
