@@ -7,14 +7,14 @@ import { HDarea } from "./sites/www.hdarea.co";
 
 const host = window.location.host;
 const sites = new Map<string, any>([
-    ["hhanclub.top", new Hhanclub()],
-    ["nanyangpt.com", new NanyangPT()],
-    ["pt.sjtu.edu.cn", new SJTU()],
-    ["pterclub.com", new Pterclub()],
-    ["tjupt.org", new TJUPT()],
-    ["www.hdarea.co", new HDarea()],
+    ["hhanclub.top", Hhanclub],
+    ["nanyangpt.com", NanyangPT],
+    ["pt.sjtu.edu.cn", SJTU],
+    ["pterclub.com", Pterclub],
+    ["tjupt.org", TJUPT],
+    ["www.hdarea.co", HDarea],
 ]);
-const site = sites.get(host);
+const site = sites.has(host) ? new (sites.get(host))() : undefined;
 
 if (site) {
     site.init();
