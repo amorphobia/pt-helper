@@ -39,6 +39,7 @@ td.clear.nowrap img {
             this.css += `
 td.clear.nowrap img {
     height: 10px;
+    object-fit: cover;
     overflow: hidden;
     transition: height 0.5s;
 }
