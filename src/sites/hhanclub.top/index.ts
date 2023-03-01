@@ -42,7 +42,9 @@ td.clear.nowrap img {
     overflow: hidden;
     transition: height 0.5s;
 }
-
+table.head {
+    height: auto;
+}
 td.clear.nowrap img:hover {
     height: ${original_height}px;
 }`;
