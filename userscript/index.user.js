@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.12
+// @version 0.1.13
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -77,10 +77,13 @@ td.clear.nowrap img {
             this.css += `
 td.clear.nowrap img {
     height: 10px;
+    object-fit: cover;
     overflow: hidden;
     transition: height 0.5s;
 }
-
+table.head {
+    height: auto;
+}
 td.clear.nowrap img:hover {
     height: ${original_height}px;
 }`;
