@@ -109,7 +109,17 @@ img.torrent_direct_link {
                         title: `${text}`,
                         showConfirmButton: false,
                         timer: 3000,
-                        toast: true
+                        toast: true,
+                        willOpen: (_popup) => {
+                            const sign_in = document.getElementById("sign_in");
+                            const sign_in_done = document.getElementById("sign_in_done");
+                            if (sign_in) {
+                                sign_in.style.display = "none";
+                            }
+                            if (sign_in_done) {
+                                sign_in_done.style.display = "inline";
+                            }
+                        }
                     });
                 });
                 return false;
