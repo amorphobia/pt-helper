@@ -23,6 +23,7 @@
     "@types/node": "^16.11.10",
     "@types/prettier": "^2.7.0",
     "@types/tampermonkey": "^4.0.5",
+    "@types/ua-parser-js": "^0.7.36",
     "@types/webpack": "^5.28.0",
     "axios-userscript-adapter": "^0.1.12",
     "prettier": "^2.7.1",
@@ -37,12 +38,18 @@
     "require-template": "https://cdn.jsdelivr.net/npm/${dependencyName}@${dependencyVersion}",
     "name": "PT Helper",
     "i18n-names": [
-      { "i18n": "zh-CN", "name": "PT 助手" }
+      {
+        "i18n": "zh-CN",
+        "name": "PT 助手"
+      }
     ],
     "namespace": "https://github.com/amorphobia/pt-helper",
     "description": "A helper for private trackers",
     "i18n-descriptions": [
-      { "i18n": "zh-CN", "description": "私密种子站点的助手" }
+      {
+        "i18n": "zh-CN",
+        "description": "私密种子站点的助手"
+      }
     ],
     "version": "0.1.17",
     "author": "amorphobia",
@@ -79,7 +86,8 @@
     "noframes": true
   },
   "dependencies": {
+    "clipboard": "^2.0.11",
     "sweetalert2": "11.4.8",
-    "clipboard": "^2.0.11"
+    "ua-parser-js": "1.0.33"
   }
 }

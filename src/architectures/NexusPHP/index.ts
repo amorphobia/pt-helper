@@ -1,4 +1,4 @@
-import { Common, direct_link_img_url } from "../../common";
+import { Common, direct_link_img_url, uaParser } from "../../common";
 import ClipboardJS from "clipboard";
 import Swal from "sweetalert2";
 import { I18N } from "../../i18n/i18n";
@@ -52,7 +52,9 @@ export class NexusPHP extends Common {
             }
         }
 
-        if (navigator.userAgent.indexOf("Macintosh") >= 0 && GM_info.scriptHandler == "Tampermonkey") {
+        if (uaParser.getBrowser().name == "Safari"
+                && uaParser.getOS().name == "Mac OS"
+                && GM_info.scriptHandler == "Tampermonkey") {
             return;
         }
 
