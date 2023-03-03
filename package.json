@@ -57,7 +57,8 @@
       "*://pt.sjtu.edu.cn/*",
       "*://pterclub.com/*",
       "*://tjupt.org/*",
-      "*://www.hdarea.co/*"
+      "*://www.hdarea.co/*",
+      "*://zmpt.cc/*"
     ],
     "connect": [],
     "require": [],

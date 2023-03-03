@@ -5,6 +5,7 @@ import { SJTU } from "./sites/pt.sjtu.edu.cn";
 import { Pterclub } from "./sites/pterclub.com";
 import { TJUPT } from "./sites/tjupt.org/index";
 import { HDarea } from "./sites/www.hdarea.co";
+import { ZmPT } from "./sites/zmpt.cc";
 
 const host = window.location.host;
 const sites = new Map<string, any>([
@@ -15,6 +16,7 @@ const sites = new Map<string, any>([
     ["pterclub.com", Pterclub],
     ["tjupt.org", TJUPT],
     ["www.hdarea.co", HDarea],
+    ["zmpt.cc", ZmPT],
 ]);
 const site = sites.has(host) ? new (sites.get(host))() : undefined;
 
