@@ -20,5 +20,6 @@
     "hideSingleSticky": "Hide single sticky torrents",
     "hideSingleDoubleSticky": "Hide single and double sticky torrents",
     "hideAllSticky": "Hide all sticky torrents",
-    "colorBlind": "Color blind mode"
+    "colorBlind": "Color blind mode",
+    "attendanceFail": "Failed to do auto attendance. Please try again manually."
 }

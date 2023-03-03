@@ -38,7 +38,6 @@ table.mainouter {
 
     public onLoad(): void {
         super.onLoad();
-        this.attendance();
     }
 
     protected addDirectLink(): void {
@@ -86,7 +85,7 @@ img.torrent_direct_link {
         this.registerClipboard("#direct_link");
     }
 
-    private attendance() {
+    protected attendance() {
         if (!this.getHostValue("attendance")) {
             return;
         }

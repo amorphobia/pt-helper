@@ -27,7 +27,6 @@ export class HDarea extends NexusPHP {
 
     public onLoad(): void {
         super.onLoad();
-        this.attendance();
     }
 
     protected tweakBanner(): void {
@@ -92,7 +91,7 @@ img.torrent_direct_link {
         this.registerClipboard("#direct_link");
     }
 
-    private attendance() {
+    protected attendance() {
         if (!this.getHostValue("attendance")) {
             return;
         }

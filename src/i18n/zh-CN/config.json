@@ -20,5 +20,6 @@
     "hideSingleSticky": "隐藏一重置顶",
     "hideSingleDoubleSticky": "隐藏一、二重置顶",
     "hideAllSticky": "隐藏所有置顶",
-    "colorBlind": "色盲模式"
+    "colorBlind": "色盲模式",
+    "attendanceFail": "自动签到失败，请手动重试"
 }

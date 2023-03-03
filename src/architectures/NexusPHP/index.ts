@@ -32,6 +32,7 @@ export class NexusPHP extends Common {
         this.tweakBanner();
         this.sayThanks();
         this.addDirectLink();
+        this.attendance();
     }
 
     protected getPasskey() {
@@ -150,5 +151,46 @@ img.torrent_direct_link {
             });
         });
         return clip;
+    }
+
+    protected attendance() {
+        if (!this.getHostValue("attendance")) {
+            return;
+        }
+        if (document.body.innerText.indexOf("签到已得") >= 0 || document.body.innerText.indexOf("Attend got") >= 0) {
+            return;
+        }
+
+        const attend = document.querySelector("a.faqlink");
+        if (attend) {
+            (attend as HTMLAnchorElement).onclick = () => {
+                this.makeGetRequest("https://" + this.host + "/attendance.php").then((text) => {
+                    const re = /签到已得\d+|Attend got: \d+/;
+                    const result = re.exec(text);
+                    const icon = result ? "success" : "error";
+                    const title = result ? result[0] : I18N[this.locale].attendanceFail;
+                    Swal.fire({
+                        position: "top",
+                        icon: icon,
+                        title: title,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        toast: true,
+                        willOpen: (_popup) => {
+                            if (result && attend.parentElement) {
+                                const anchor = document.createElement("a");
+                                anchor.innerHTML = result[0];
+                                attend.parentElement.insertBefore(anchor, attend);
+                                attend.setAttribute("style", "display: none;");
+                            }
+                        }
+                    });
+                });
+                return false;
+            };
+            this.wait(2000).then(() => {
+                (attend as HTMLAnchorElement).click();
+            });
+        }
     }
 }
