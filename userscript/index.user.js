@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.15
+// @version 0.1.16
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -17,6 +17,7 @@
 // @match *://pterclub.com/*
 // @match *://tjupt.org/*
 // @match *://www.hdarea.co/*
+// @match *://www.htpt.cc/*
 // @match *://zmpt.cc/*
 // @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
@@ -5289,6 +5290,54 @@ exports.HDarea = HDarea;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.HTPT = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class HTPT extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("www.htpt.cc");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
+}
+exports.HTPT = HTPT;
+
+
+/***/ }),
+/* 16 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ZmPT = void 0;
 const NexusPHP_1 = __webpack_require__(2);
 const i18n_1 = __webpack_require__(4);
@@ -5372,7 +5421,8 @@ const pt_sjtu_edu_cn_1 = __webpack_require__(11);
 const pterclub_com_1 = __webpack_require__(12);
 const index_1 = __webpack_require__(13);
 const www_hdarea_co_1 = __webpack_require__(14);
-const zmpt_cc_1 = __webpack_require__(15);
+const www_htpt_cc_1 = __webpack_require__(15);
+const zmpt_cc_1 = __webpack_require__(16);
 const host = window.location.host;
 const sites = new Map([
     ["carpt.net", carpt_net_1.CarPT],
@@ -5382,6 +5432,7 @@ const sites = new Map([
     ["pterclub.com", pterclub_com_1.Pterclub],
     ["tjupt.org", index_1.TJUPT],
     ["www.hdarea.co", www_hdarea_co_1.HDarea],
+    ["www.htpt.cc", www_htpt_cc_1.HTPT],
     ["zmpt.cc", zmpt_cc_1.ZmPT],
 ]);
 const site = sites.has(host) ? new (sites.get(host))() : undefined;
