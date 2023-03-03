@@ -3,7 +3,7 @@ declare var unsafeWindow : Window;
 declare var GM_info : {
     version          : string,
     scriptWillUpdate : boolean,
-    scriptHandler    : "Tampermonkey",
+    scriptHandler    : "Tampermonkey" | "Stay",
     scriptUpdateURL ?: string,
     scriptSource     : string,
     scriptMetaStr   ?: string,

@@ -52,6 +52,10 @@ export class NexusPHP extends Common {
             }
         }
 
+        if (navigator.userAgent.indexOf("Macintosh") >= 0 && GM_info.scriptHandler == "Tampermonkey") {
+            return;
+        }
+
         const cp_url = "https://" + this.host + "/usercp.php";
         this.makeGetRequest(cp_url).then((responseText) => {
             const container = document.implementation.createHTMLDocument().documentElement;

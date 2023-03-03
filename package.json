@@ -65,12 +65,13 @@
     "require": [],
     "grant": [
       "GM_addStyle",
-      "GM_registerMenuCommand",
-      "GM_unregisterMenuCommand",
-      "GM_openInTab",
       "GM_getValue",
-      "GM_setValue",
+      "GM_info",
       "GM_notification",
+      "GM_openInTab",
+      "GM_registerMenuCommand",
+      "GM_setValue",
+      "GM_unregisterMenuCommand",
       "GM_xmlhttpRequest"
     ],
     "exclude": [],
