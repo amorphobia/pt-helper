@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.16
+// @version 0.1.17
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -136,21 +136,30 @@ class NexusPHP extends common_1.Common {
             this.passkey = passkey;
             return;
         }
+        if (location.href.indexOf("/usercp.php") >= 0) {
+            if (this.extractPasskey(document)) {
+                return;
+            }
+        }
         const cp_url = "https://" + this.host + "/usercp.php";
         this.makeGetRequest(cp_url).then((responseText) => {
             const container = document.implementation.createHTMLDocument().documentElement;
             container.innerHTML = responseText;
-            const re = /[\w\d]{32}/;
-            const tds = container.querySelectorAll("td.rowfollow");
-            for (const td of tds) {
-                const result = re.exec(td.innerText);
-                if (result) {
-                    this.setHostValue("passkey", result[0]);
-                    this.passkey = result[0];
-                    return;
-                }
-            }
+            this.extractPasskey(container);
         });
+    }
+    extractPasskey(doc) {
+        const re = /[\w\d]{32}/;
+        const tds = doc.querySelectorAll("td.rowfollow");
+        for (const td of tds) {
+            const result = re.exec(td.innerText);
+            if (result) {
+                this.setHostValue("passkey", result[0]);
+                this.passkey = result[0];
+                return true;
+            }
+        }
+        return false;
     }
     tweakBanner() { }
     sayThanks() {
@@ -166,7 +175,35 @@ class NexusPHP extends common_1.Common {
     }
     addDirectLink() {
         var _a;
-        if (!this.getHostValue("directLink") || this.passkey == "") {
+        if (!this.getHostValue("directLink")) {
+            return;
+        }
+        this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+img.torrent_direct_link {
+    width: 16px;
+    height: 16px;
+    background: url('${common_1.direct_link_img_url}');
+    padding-bottom: 1px;
+}`;
+        if (this.passkey == "") {
+            if (location.href.indexOf("/torrents.php") >= 0) {
+                sweetalert2_1.default.fire({
+                    position: "top-end",
+                    icon: "info",
+                    title: `${i18n_1.I18N[this.locale].noPasskey}「${i18n_1.I18N[this.locale].directLinkName}」`,
+                    showConfirmButton: false,
+                    timer: 5000,
+                    toast: true
+                });
+            }
             return;
         }
         const id_re = /id=[\d]+/;
@@ -193,21 +230,6 @@ class NexusPHP extends common_1.Common {
             a.appendChild(img);
             td.prepend(a);
         }
-        this.css += `
-.swal2-container {
-    z-index: 4294967295;
-}
-h2#swal2-title {
-    background-color: transparent;
-    background-image: none;
-    border: none;
-}
-img.torrent_direct_link {
-    width: 16px;
-    height: 16px;
-    background: url('${common_1.direct_link_img_url}');
-    padding-bottom: 1px;
-}`;
         this.registerClipboard("#direct_link");
     }
     registerClipboard(id) {
@@ -453,14 +475,14 @@ exports.I18N = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"feedback":"💬Feedback","turnOn":"Turned on","turnOff":"Turned off","reloadTakeEffect":"(Click here to reload the page and take effect)","changeTo":"Changed to","thanks":"Auto say thanks","directLink":"Torrent direct link button (click the button to copy)","directLinkName":"Direct link button","passkeyWarning":"Click to copy. Link contains secret passkey. DO NOT SHARE!","copySuccess":"Copied","copyError":"Failed to copy","copyByHand":"Please manually copy it.","bannerFold":"Auto fold the banner (invalid when hidding)","bannerFoldName":"Auto fold the banner","bannerHide":"Hide the banner (auto fold will be invalid)","bannerHideName":"Hide the banner","attendance":"Auto attend","showAllSticky":"Show all sticky torrents","hideSingleSticky":"Hide single sticky torrents","hideSingleDoubleSticky":"Hide single and double sticky torrents","hideAllSticky":"Hide all sticky torrents","colorBlind":"Color blind mode","attendanceFail":"Failed to do auto attendance. Please try again manually."}');
+module.exports = JSON.parse('{"feedback":"💬Feedback","turnOn":"Turned on","turnOff":"Turned off","reloadTakeEffect":"(Click here to reload the page and take effect)","changeTo":"Changed to","thanks":"Auto say thanks","directLink":"Torrent direct link button (click the button to copy)","directLinkName":"Torrent direct link button","passkeyWarning":"Click to copy. Link contains secret passkey. DO NOT SHARE!","copySuccess":"Copied","copyError":"Failed to copy","copyByHand":"Please manually copy it.","bannerFold":"Auto fold the banner (invalid when hidding)","bannerFoldName":"Auto fold the banner","bannerHide":"Hide the banner (auto fold will be invalid)","bannerHideName":"Hide the banner","attendance":"Auto attend","showAllSticky":"Show all sticky torrents","hideSingleSticky":"Hide single sticky torrents","hideSingleDoubleSticky":"Hide single and double sticky torrents","hideAllSticky":"Hide all sticky torrents","colorBlind":"Color blind mode","attendanceFail":"Failed to do auto attendance. Please try again manually.","noPasskey":"Passkey not cached. Please go to control pannel or turn off option"}');
 
 /***/ }),
 /* 6 */
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"feedback":"💬反馈与建议","turnOn":"已开启","turnOff":"已关闭","reloadTakeEffect":"（点击这里刷新网页后生效）","changeTo":"切换为","thanks":"自动说谢谢","directLink":"种子直链按钮（左键点击按钮复制直链）","directLinkName":"种子直链","passkeyWarning":"左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！","copySuccess":"复制成功","copyError":"复制失败","copyByHand":"请手动复制","bannerFold":"自动折叠横幅（隐藏时折叠设置无效）","bannerFoldName":"自动折叠横幅","bannerHide":"隐藏横幅（隐藏时折叠设置无效）","bannerHideName":"隐藏横幅","attendance":"自动签到","showAllSticky":"显示所有置顶","hideSingleSticky":"隐藏一重置顶","hideSingleDoubleSticky":"隐藏一、二重置顶","hideAllSticky":"隐藏所有置顶","colorBlind":"色盲模式","attendanceFail":"自动签到失败，请手动重试"}');
+module.exports = JSON.parse('{"feedback":"💬反馈与建议","turnOn":"已开启","turnOff":"已关闭","reloadTakeEffect":"（点击这里刷新网页后生效）","changeTo":"切换为","thanks":"自动说谢谢","directLink":"种子直链按钮（左键点击按钮复制直链）","directLinkName":"种子直链按钮","passkeyWarning":"左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！","copySuccess":"复制成功","copyError":"复制失败","copyByHand":"请手动复制","bannerFold":"自动折叠横幅（隐藏时折叠设置无效）","bannerFoldName":"自动折叠横幅","bannerHide":"隐藏横幅（隐藏时折叠设置无效）","bannerHideName":"隐藏横幅","attendance":"自动签到","showAllSticky":"显示所有置顶","hideSingleSticky":"隐藏一重置顶","hideSingleDoubleSticky":"隐藏一、二重置顶","hideAllSticky":"隐藏所有置顶","colorBlind":"色盲模式","attendanceFail":"自动签到失败，请手动重试","noPasskey":"未缓存 passkey，请前往控制面板或关掉选项"}');
 
 /***/ }),
 /* 7 */
