@@ -89,7 +89,37 @@ export class NexusPHP extends Common {
     }
 
     protected addDirectLink() {
-        if (!this.getHostValue("directLink") || this.passkey == "") {
+        if (!this.getHostValue("directLink")) {
+            return;
+        }
+
+        this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+img.torrent_direct_link {
+    width: 16px;
+    height: 16px;
+    background: url('${direct_link_img_url}');
+    padding-bottom: 1px;
+}`;
+
+        if (this.passkey == "") {
+            if (location.href.indexOf("/torrents.php") >= 0) {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "info",
+                    title: `${I18N[this.locale].noPasskey}「${I18N[this.locale].directLinkName}」`,
+                    showConfirmButton: false,
+                    timer: 5000,
+                    toast: true
+                });
+            }
             return;
         }
 
@@ -118,22 +148,6 @@ export class NexusPHP extends Common {
             a.appendChild(img);
             td.prepend(a);
         }
-
-        this.css += `
-.swal2-container {
-    z-index: 4294967295;
-}
-h2#swal2-title {
-    background-color: transparent;
-    background-image: none;
-    border: none;
-}
-img.torrent_direct_link {
-    width: 16px;
-    height: 16px;
-    background: url('${direct_link_img_url}');
-    padding-bottom: 1px;
-}`;
 
         this.registerClipboard("#direct_link");
     }

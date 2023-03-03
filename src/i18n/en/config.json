@@ -6,7 +6,7 @@
     "changeTo": "Changed to",
     "thanks": "Auto say thanks",
     "directLink": "Torrent direct link button (click the button to copy)",
-    "directLinkName": "Direct link button",
+    "directLinkName": "Torrent direct link button",
     "passkeyWarning": "Click to copy. Link contains secret passkey. DO NOT SHARE!",
     "copySuccess": "Copied",
     "copyError": "Failed to copy",
@@ -21,5 +21,6 @@
     "hideSingleDoubleSticky": "Hide single and double sticky torrents",
     "hideAllSticky": "Hide all sticky torrents",
     "colorBlind": "Color blind mode",
-    "attendanceFail": "Failed to do auto attendance. Please try again manually."
+    "attendanceFail": "Failed to do auto attendance. Please try again manually.",
+    "noPasskey": "Passkey not cached. Please go to control pannel or turn off option"
 }

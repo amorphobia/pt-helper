@@ -6,7 +6,7 @@
     "changeTo": "切换为",
     "thanks": "自动说谢谢",
     "directLink": "种子直链按钮（左键点击按钮复制直链）",
-    "directLinkName": "种子直链",
+    "directLinkName": "种子直链按钮",
     "passkeyWarning": "左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！",
     "copySuccess": "复制成功",
     "copyError": "复制失败",
@@ -21,5 +21,6 @@
     "hideSingleDoubleSticky": "隐藏一、二重置顶",
     "hideAllSticky": "隐藏所有置顶",
     "colorBlind": "色盲模式",
-    "attendanceFail": "自动签到失败，请手动重试"
+    "attendanceFail": "自动签到失败，请手动重试",
+    "noPasskey": "未缓存 passkey，请前往控制面板或关掉选项"
 }
