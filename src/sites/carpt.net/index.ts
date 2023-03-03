@@ -9,8 +9,8 @@ export class CarPT extends NexusPHP {
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": I18N[this.locale].bannerHide,
-                "name": I18N[this.locale].bannerHide,
+                "display": I18N[this.locale].bannerHideName,
+                "name": I18N[this.locale].bannerHideName,
                 "value": false
             }
         ].concat(this.menu_items);
