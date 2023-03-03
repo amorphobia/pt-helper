@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.13
+// @version 0.1.14
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -10,12 +10,14 @@
 // @icon data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cGF0aCBmaWxsPSIjNjc4IiBkPSJNMTYwLDE3MGwtNTYtMjhhNTMsNTMsMCwwLDAsMC0yOGw1Ni0yOGE1Myw1MywwLDEsMC05LTE5bC01NiwyOGE1Myw1MywwLDEsMCwwLDY2bDU2LDI4YTUzLDUzLDAsMSwwLDktMTkiLz48Y2lyY2xlIGZpbGw9IiMwZjkiIGN4PSIyMDIiIGN5PSI1MyIgcj0iMzMiLz48Y2lyY2xlIGZpbGw9IiM3Y2UiIGN4PSIyMDIiIGN5PSIyMDIiIHI9IjMzIi8+PGNpcmNsZSBmaWxsPSIjZjU1IiBjeD0iNTMiIGN5PSIxMjgiIHI9IjMzIi8+PC9zdmc+
 // @supportURL https://github.com/amorphobia/pt-helper/issues
 // @license AGPL-3.0-or-later
+// @match *://carpt.net/*
 // @match *://hhanclub.top/*
 // @match *://nanyangpt.com/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://pterclub.com/*
 // @match *://tjupt.org/*
 // @match *://www.hdarea.co/*
+// @match *://zmpt.cc/*
 // @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
 // @grant GM_addStyle
@@ -38,24 +40,17 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Hhanclub = void 0;
-const index_1 = __webpack_require__(2);
+exports.CarPT = void 0;
+const NexusPHP_1 = __webpack_require__(2);
 const i18n_1 = __webpack_require__(4);
-class Hhanclub extends index_1.NexusPHP {
+class CarPT extends NexusPHP_1.NexusPHP {
     constructor() {
-        super("hhanclub.top");
+        super("carpt.net");
         this.menu_items = [
-            {
-                "id": "bannerFold",
-                "type": "switch",
-                "display": i18n_1.I18N[this.locale].bannerFold,
-                "name": i18n_1.I18N[this.locale].bannerFoldName,
-                "value": true
-            },
             {
                 "id": "bannerHide",
                 "type": "switch",
-                "display": i18n_1.I18N[this.locale].bannerHide,
+                "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
             }
@@ -67,30 +62,16 @@ class Hhanclub extends index_1.NexusPHP {
     tweakBanner() {
         if (this.getHostValue("bannerHide")) {
             this.css += `
-td.clear.nowrap img {
-    display: none;
-}`;
-        }
-        else if (this.getHostValue("bannerFold")) {
-            const banner = document.querySelector("td.clear.nowrap");
-            const original_height = banner === null || banner === void 0 ? void 0 : banner.clientHeight;
-            this.css += `
-td.clear.nowrap img {
-    height: 10px;
-    object-fit: cover;
-    overflow: hidden;
-    transition: height 0.5s;
-}
 table.head {
-    height: auto;
+    display: none;
 }
-td.clear.nowrap img:hover {
-    height: ${original_height}px;
+table.mainouter {
+    margin-top: 20px;
 }`;
         }
     }
 }
-exports.Hhanclub = Hhanclub;
+exports.CarPT = CarPT;
 
 
 /***/ }),
@@ -126,6 +107,13 @@ class NexusPHP extends common_1.Common {
                 "display": i18n_1.I18N[this.locale].directLink,
                 "name": i18n_1.I18N[this.locale].directLinkName,
                 "value": true
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -135,6 +123,7 @@ class NexusPHP extends common_1.Common {
         this.tweakBanner();
         this.sayThanks();
         this.addDirectLink();
+        this.attendance();
     }
     getPasskey() {
         const value = this.getHostValue("passkey");
@@ -244,6 +233,54 @@ img.torrent_direct_link {
             });
         });
         return clip;
+    }
+    attendance() {
+        if (!this.getHostValue("attendance")) {
+            return;
+        }
+        if (document.body.innerText.indexOf("签到已得") >= 0 || document.body.innerText.indexOf("Attend got") >= 0) {
+            return;
+        }
+        const attend = document.querySelector("a.faqlink");
+        if (attend) {
+            this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}`;
+            attend.onclick = () => {
+                this.makeGetRequest("https://" + this.host + "/attendance.php").then((text) => {
+                    const re = /签到已得\d+|Attend got: \d+/;
+                    const result = re.exec(text);
+                    const icon = result ? "success" : "error";
+                    const title = result ? result[0] : i18n_1.I18N[this.locale].attendanceFail;
+                    sweetalert2_1.default.fire({
+                        position: "top",
+                        icon: icon,
+                        title: title,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        toast: true,
+                        willOpen: (_popup) => {
+                            if (result && attend.parentElement) {
+                                const anchor = document.createElement("a");
+                                anchor.innerHTML = result[0];
+                                attend.parentElement.insertBefore(anchor, attend);
+                                attend.setAttribute("style", "display: none;");
+                            }
+                        }
+                    });
+                });
+                return false;
+            };
+            this.wait(2000).then(() => {
+                attend.click();
+            });
+        }
     }
 }
 exports.NexusPHP = NexusPHP;
@@ -415,14 +452,14 @@ exports.I18N = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"feedback":"💬Feedback","turnOn":"Turned on","turnOff":"Turned off","reloadTakeEffect":"(Click here to reload the page and take effect)","changeTo":"Changed to","thanks":"Auto say thanks","directLink":"Torrent direct link button (click the button to copy)","directLinkName":"Direct link button","passkeyWarning":"Click to copy. Link contains secret passkey. DO NOT SHARE!","copySuccess":"Copied","copyError":"Failed to copy","copyByHand":"Please manually copy it.","bannerFold":"Auto fold the banner (invalid when hidding)","bannerFoldName":"Auto fold the banner","bannerHide":"Hide the banner (auto fold will be invalid)","bannerHideName":"Hide the banner","attendance":"Auto attend","showAllSticky":"Show all sticky torrents","hideSingleSticky":"Hide single sticky torrents","hideSingleDoubleSticky":"Hide single and double sticky torrents","hideAllSticky":"Hide all sticky torrents","colorBlind":"Color blind mode"}');
+module.exports = JSON.parse('{"feedback":"💬Feedback","turnOn":"Turned on","turnOff":"Turned off","reloadTakeEffect":"(Click here to reload the page and take effect)","changeTo":"Changed to","thanks":"Auto say thanks","directLink":"Torrent direct link button (click the button to copy)","directLinkName":"Direct link button","passkeyWarning":"Click to copy. Link contains secret passkey. DO NOT SHARE!","copySuccess":"Copied","copyError":"Failed to copy","copyByHand":"Please manually copy it.","bannerFold":"Auto fold the banner (invalid when hidding)","bannerFoldName":"Auto fold the banner","bannerHide":"Hide the banner (auto fold will be invalid)","bannerHideName":"Hide the banner","attendance":"Auto attend","showAllSticky":"Show all sticky torrents","hideSingleSticky":"Hide single sticky torrents","hideSingleDoubleSticky":"Hide single and double sticky torrents","hideAllSticky":"Hide all sticky torrents","colorBlind":"Color blind mode","attendanceFail":"Failed to do auto attendance. Please try again manually."}');
 
 /***/ }),
 /* 6 */
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"feedback":"💬反馈与建议","turnOn":"已开启","turnOff":"已关闭","reloadTakeEffect":"（点击这里刷新网页后生效）","changeTo":"切换为","thanks":"自动说谢谢","directLink":"种子直链按钮（左键点击按钮复制直链）","directLinkName":"种子直链","passkeyWarning":"左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！","copySuccess":"复制成功","copyError":"复制失败","copyByHand":"请手动复制","bannerFold":"自动折叠横幅（隐藏时折叠设置无效）","bannerFoldName":"自动折叠横幅","bannerHide":"隐藏横幅（隐藏时折叠设置无效）","bannerHideName":"隐藏横幅","attendance":"自动签到","showAllSticky":"显示所有置顶","hideSingleSticky":"隐藏一重置顶","hideSingleDoubleSticky":"隐藏一、二重置顶","hideAllSticky":"隐藏所有置顶","colorBlind":"色盲模式"}');
+module.exports = JSON.parse('{"feedback":"💬反馈与建议","turnOn":"已开启","turnOff":"已关闭","reloadTakeEffect":"（点击这里刷新网页后生效）","changeTo":"切换为","thanks":"自动说谢谢","directLink":"种子直链按钮（左键点击按钮复制直链）","directLinkName":"种子直链","passkeyWarning":"左键单击复制，链接中包含个人秘钥Passkey，切勿泄露！","copySuccess":"复制成功","copyError":"复制失败","copyByHand":"请手动复制","bannerFold":"自动折叠横幅（隐藏时折叠设置无效）","bannerFoldName":"自动折叠横幅","bannerHide":"隐藏横幅（隐藏时折叠设置无效）","bannerHideName":"隐藏横幅","attendance":"自动签到","showAllSticky":"显示所有置顶","hideSingleSticky":"隐藏一重置顶","hideSingleDoubleSticky":"隐藏一、二重置顶","hideAllSticky":"隐藏所有置顶","colorBlind":"色盲模式","attendanceFail":"自动签到失败，请手动重试"}');
 
 /***/ }),
 /* 7 */
@@ -4740,6 +4777,68 @@ if (typeof this !== 'undefined' && this.Sweetalert2){  this.swal = this.sweetAle
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Hhanclub = void 0;
+const index_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class Hhanclub extends index_1.NexusPHP {
+    constructor() {
+        super("hhanclub.top");
+        this.menu_items = [
+            {
+                "id": "bannerFold",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerFold,
+                "name": i18n_1.I18N[this.locale].bannerFoldName,
+                "value": true
+            },
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHide,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+td.clear.nowrap img {
+    display: none;
+}`;
+        }
+        else if (this.getHostValue("bannerFold")) {
+            const banner = document.querySelector("td.clear.nowrap");
+            const original_height = banner === null || banner === void 0 ? void 0 : banner.clientHeight;
+            this.css += `
+td.clear.nowrap img {
+    height: 10px;
+    object-fit: cover;
+    overflow: hidden;
+    transition: height 0.5s;
+}
+table.head {
+    height: auto;
+}
+td.clear.nowrap img:hover {
+    height: ${original_height}px;
+}`;
+        }
+    }
+}
+exports.Hhanclub = Hhanclub;
+
+
+/***/ }),
+/* 10 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NanyangPT = void 0;
 const NexusPHP_1 = __webpack_require__(2);
 const i18n_1 = __webpack_require__(4);
@@ -4778,7 +4877,7 @@ exports.NanyangPT = NanyangPT;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -4819,7 +4918,7 @@ exports.SJTU = SJTU;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -4839,13 +4938,6 @@ class Pterclub extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
-            },
-            {
-                "id": "attendance",
-                "type": "switch",
-                "display": i18n_1.I18N[this.locale].attendance,
-                "name": i18n_1.I18N[this.locale].attendance,
-                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -4862,7 +4954,6 @@ table.mainouter {
     }
     onLoad() {
         super.onLoad();
-        this.attendance();
     }
     addDirectLink() {
         if (!this.getHostValue("directLink")) {
@@ -4920,7 +5011,7 @@ exports.Pterclub = Pterclub;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5042,7 +5133,7 @@ exports.TJUPT = TJUPT;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -5066,19 +5157,11 @@ class HDarea extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
-            },
-            {
-                "id": "attendance",
-                "type": "switch",
-                "display": i18n_1.I18N[this.locale].attendance,
-                "name": i18n_1.I18N[this.locale].attendance,
-                "value": true
             }
         ].concat(this.menu_items);
     }
     onLoad() {
         super.onLoad();
-        this.attendance();
     }
     tweakBanner() {
         if (this.getHostValue("bannerHide")) {
@@ -5154,7 +5237,17 @@ img.torrent_direct_link {
                         title: `${text}`,
                         showConfirmButton: false,
                         timer: 3000,
-                        toast: true
+                        toast: true,
+                        willOpen: (_popup) => {
+                            const sign_in = document.getElementById("sign_in");
+                            const sign_in_done = document.getElementById("sign_in_done");
+                            if (sign_in) {
+                                sign_in.style.display = "none";
+                            }
+                            if (sign_in_done) {
+                                sign_in_done.style.display = "inline";
+                            }
+                        }
                     });
                 });
                 return false;
@@ -5166,6 +5259,47 @@ img.torrent_direct_link {
     }
 }
 exports.HDarea = HDarea;
+
+
+/***/ }),
+/* 15 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ZmPT = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class ZmPT extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("zmpt.cc");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
+}
+exports.ZmPT = ZmPT;
 
 
 /***/ })
@@ -5203,20 +5337,24 @@ var __webpack_exports__ = {};
 var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const hhanclub_top_1 = __webpack_require__(1);
-const nanyangpt_com_1 = __webpack_require__(9);
-const pt_sjtu_edu_cn_1 = __webpack_require__(10);
-const pterclub_com_1 = __webpack_require__(11);
-const index_1 = __webpack_require__(12);
-const www_hdarea_co_1 = __webpack_require__(13);
+const carpt_net_1 = __webpack_require__(1);
+const hhanclub_top_1 = __webpack_require__(9);
+const nanyangpt_com_1 = __webpack_require__(10);
+const pt_sjtu_edu_cn_1 = __webpack_require__(11);
+const pterclub_com_1 = __webpack_require__(12);
+const index_1 = __webpack_require__(13);
+const www_hdarea_co_1 = __webpack_require__(14);
+const zmpt_cc_1 = __webpack_require__(15);
 const host = window.location.host;
 const sites = new Map([
+    ["carpt.net", carpt_net_1.CarPT],
     ["hhanclub.top", hhanclub_top_1.Hhanclub],
     ["nanyangpt.com", nanyangpt_com_1.NanyangPT],
     ["pt.sjtu.edu.cn", pt_sjtu_edu_cn_1.SJTU],
     ["pterclub.com", pterclub_com_1.Pterclub],
     ["tjupt.org", index_1.TJUPT],
     ["www.hdarea.co", www_hdarea_co_1.HDarea],
+    ["zmpt.cc", zmpt_cc_1.ZmPT],
 ]);
 const site = sites.has(host) ? new (sites.get(host))() : undefined;
 if (site) {
