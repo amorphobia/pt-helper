@@ -22,13 +22,6 @@ export class NexusPHP extends Common {
                 "display": I18N[this.locale].directLink,
                 "name": I18N[this.locale].directLinkName,
                 "value": true
-            },
-            {
-                "id": "attendance",
-                "type": "switch",
-                "display": I18N[this.locale].attendance,
-                "name": I18N[this.locale].attendance,
-                "value": true
             }
         ].concat(this.menu_items);
     }
