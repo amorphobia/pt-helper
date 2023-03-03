@@ -51,6 +51,7 @@
     "supportURL": "https://github.com/amorphobia/pt-helper/issues",
     "license": "AGPL-3.0-or-later",
     "match": [
+      "*://carpt.net/*",
       "*://hhanclub.top/*",
       "*://nanyangpt.com/*",
       "*://pt.sjtu.edu.cn/*",
