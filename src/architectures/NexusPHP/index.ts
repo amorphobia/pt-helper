@@ -22,6 +22,13 @@ export class NexusPHP extends Common {
                 "display": I18N[this.locale].directLink,
                 "name": I18N[this.locale].directLinkName,
                 "value": true
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": I18N[this.locale].attendance,
+                "name": I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -163,6 +170,15 @@ img.torrent_direct_link {
 
         const attend = document.querySelector("a.faqlink");
         if (attend) {
+            this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}`;
             (attend as HTMLAnchorElement).onclick = () => {
                 this.makeGetRequest("https://" + this.host + "/attendance.php").then((text) => {
                     const re = /签到已得\d+|Attend got: \d+/;
