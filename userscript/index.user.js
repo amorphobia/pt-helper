@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.14
+// @version 0.1.15
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -53,6 +53,13 @@ class CarPT extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -106,13 +113,6 @@ class NexusPHP extends common_1.Common {
                 "type": "switch",
                 "display": i18n_1.I18N[this.locale].directLink,
                 "name": i18n_1.I18N[this.locale].directLinkName,
-                "value": true
-            },
-            {
-                "id": "attendance",
-                "type": "switch",
-                "display": i18n_1.I18N[this.locale].attendance,
-                "name": i18n_1.I18N[this.locale].attendance,
                 "value": true
             }
         ].concat(this.menu_items);
@@ -4797,6 +4797,13 @@ class Hhanclub extends index_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHide,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -4938,6 +4945,13 @@ class Pterclub extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -5157,6 +5171,13 @@ class HDarea extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
@@ -5281,6 +5302,13 @@ class ZmPT extends NexusPHP_1.NexusPHP {
                 "display": i18n_1.I18N[this.locale].bannerHideName,
                 "name": i18n_1.I18N[this.locale].bannerHideName,
                 "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
             }
         ].concat(this.menu_items);
     }
