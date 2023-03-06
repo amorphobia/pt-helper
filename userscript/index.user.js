@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.18
+// @version 0.1.19
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -12,7 +12,9 @@
 // @license AGPL-3.0-or-later
 // @match *://carpt.net/*
 // @match *://hhanclub.top/*
+// @match *://kamept.com/*
 // @match *://nanyangpt.com/*
+// @match *://pt.btschool.club/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://pterclub.com/*
 // @match *://tjupt.org/*
@@ -169,11 +171,11 @@ class NexusPHP extends common_1.Common {
         return false;
     }
     tweakBanner() { }
-    sayThanks() {
+    sayThanks(ms = 2000) {
         if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
             return;
         }
-        this.wait(2000).then(() => {
+        this.wait(ms).then(() => {
             const input = document.querySelector("#saythanks");
             if (input && !input.disabled) {
                 input.click();
@@ -5772,6 +5774,54 @@ exports.Hhanclub = Hhanclub;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KamePT = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class KamePT extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("kamept.com");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
+}
+exports.KamePT = KamePT;
+
+
+/***/ }),
+/* 12 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NanyangPT = void 0;
 const NexusPHP_1 = __webpack_require__(2);
 const i18n_1 = __webpack_require__(4);
@@ -5810,7 +5860,107 @@ exports.NanyangPT = NanyangPT;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BTSCHOOL = void 0;
+const sweetalert2_1 = __importDefault(__webpack_require__(9));
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class BTSCHOOL extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("pt.btschool.club");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
+    sayThanks() {
+        super.sayThanks(20000);
+    }
+    attendance() {
+        if (!this.getHostValue("attendance")) {
+            return;
+        }
+        const attend = document.querySelector("#outer [href^=\"index.php?action=addbonus\"]");
+        if (!attend) {
+            return;
+        }
+        this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}`;
+        attend.onclick = () => {
+            this.makeGetRequest("https://" + this.host + "/index.php?action=addbonus").then((text) => {
+                const re = /今天签到您获得\d+点魔力值|Sign in today and get it\s?\d+\s?Point of magic value/;
+                const result = re.exec(text);
+                const icon = result ? "success" : "error";
+                const title = result ? result[0] : i18n_1.I18N[this.locale].attendanceFail;
+                sweetalert2_1.default.fire({
+                    position: "top",
+                    icon: icon,
+                    title: title,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    toast: true,
+                    willOpen(_popup) {
+                        if (result && attend.parentElement && attend.parentElement.parentElement) {
+                            attend.parentElement.parentElement.setAttribute("style", "border: none; padding: 10px; background: green");
+                            attend.setAttribute("href", "index.php");
+                            attend.innerHTML = `<font color="white">result[0]</font>`;
+                        }
+                    },
+                });
+            });
+            return false;
+        };
+        this.wait(2000).then(() => {
+            attend.click();
+        });
+    }
+}
+exports.BTSCHOOL = BTSCHOOL;
+
+
+/***/ }),
+/* 14 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5851,7 +6001,7 @@ exports.SJTU = SJTU;
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5951,7 +6101,7 @@ exports.Pterclub = Pterclub;
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6073,7 +6223,7 @@ exports.TJUPT = TJUPT;
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -6209,7 +6359,7 @@ exports.HDarea = HDarea;
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6257,7 +6407,7 @@ exports.HTPT = HTPT;
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6347,18 +6497,22 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const carpt_net_1 = __webpack_require__(1);
 const hhanclub_top_1 = __webpack_require__(10);
-const nanyangpt_com_1 = __webpack_require__(11);
-const pt_sjtu_edu_cn_1 = __webpack_require__(12);
-const pterclub_com_1 = __webpack_require__(13);
-const index_1 = __webpack_require__(14);
-const www_hdarea_co_1 = __webpack_require__(15);
-const www_htpt_cc_1 = __webpack_require__(16);
-const zmpt_cc_1 = __webpack_require__(17);
+const kamept_com_1 = __webpack_require__(11);
+const nanyangpt_com_1 = __webpack_require__(12);
+const pt_btschool_club_1 = __webpack_require__(13);
+const pt_sjtu_edu_cn_1 = __webpack_require__(14);
+const pterclub_com_1 = __webpack_require__(15);
+const index_1 = __webpack_require__(16);
+const www_hdarea_co_1 = __webpack_require__(17);
+const www_htpt_cc_1 = __webpack_require__(18);
+const zmpt_cc_1 = __webpack_require__(19);
 const host = window.location.host;
 const sites = new Map([
     ["carpt.net", carpt_net_1.CarPT],
     ["hhanclub.top", hhanclub_top_1.Hhanclub],
+    ["kamept.com", kamept_com_1.KamePT],
     ["nanyangpt.com", nanyangpt_com_1.NanyangPT],
+    ["pt.btschool.club", pt_btschool_club_1.BTSCHOOL],
     ["pt.sjtu.edu.cn", pt_sjtu_edu_cn_1.SJTU],
     ["pterclub.com", pterclub_com_1.Pterclub],
     ["tjupt.org", index_1.TJUPT],
