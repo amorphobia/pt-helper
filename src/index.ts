@@ -1,5 +1,6 @@
 import { CarPT } from "./sites/carpt.net";
 import { Hhanclub } from "./sites/hhanclub.top";
+import { KamePT } from "./sites/kamept.com";
 import { NanyangPT } from "./sites/nanyangpt.com";
 import { SJTU } from "./sites/pt.sjtu.edu.cn";
 import { Pterclub } from "./sites/pterclub.com";
@@ -12,6 +13,7 @@ const host = window.location.host;
 const sites = new Map<string, any>([
     ["carpt.net", CarPT],
     ["hhanclub.top", Hhanclub],
+    ["kamept.com", KamePT],
     ["nanyangpt.com", NanyangPT],
     ["pt.sjtu.edu.cn", SJTU],
     ["pterclub.com", Pterclub],

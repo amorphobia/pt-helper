@@ -1,9 +1,9 @@
 import { NexusPHP } from "../../architectures/NexusPHP";
 import { I18N } from "../../i18n/i18n";
 
-export class ZmPT extends NexusPHP {
+export class KamePT extends NexusPHP {
     constructor() {
-        super("zmpt.cc");
+        super("kamept.com");
 
         this.menu_items = [
             {
