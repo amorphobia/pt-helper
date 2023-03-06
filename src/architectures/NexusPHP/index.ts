@@ -82,11 +82,11 @@ export class NexusPHP extends Common {
 
     protected tweakBanner() {}
 
-    protected sayThanks() {
+    protected sayThanks(ms = 2000) {
         if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
             return;
         }
-        this.wait(2000).then(() => {
+        this.wait(ms).then(() => {
             const input = document.querySelector("#saythanks") as HTMLInputElement;
             if (input && !input.disabled) {
                 input.click();
