@@ -24,18 +24,6 @@ export class Pterclub extends NexusPHP {
         ].concat(this.menu_items);
     }
 
-    protected tweakBanner(): void {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
-
     public onLoad(): void {
         super.onLoad();
     }

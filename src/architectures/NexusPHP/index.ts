@@ -80,7 +80,17 @@ export class NexusPHP extends Common {
         return false;
     }
 
-    protected tweakBanner() {}
+    protected tweakBanner(): void {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
 
     protected sayThanks(ms = 2000) {
         if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {

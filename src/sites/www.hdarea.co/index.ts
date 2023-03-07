@@ -29,18 +29,6 @@ export class HDarea extends NexusPHP {
         super.onLoad();
     }
 
-    protected tweakBanner(): void {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
-
     protected addDirectLink(): void {
         if (!this.getHostValue("directLink") || this.passkey == "") {
             return;

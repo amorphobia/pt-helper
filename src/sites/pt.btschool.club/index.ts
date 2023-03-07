@@ -28,18 +28,6 @@ export class BTSCHOOL extends NexusPHP {
         super.onLoad();
     }
 
-    protected tweakBanner(): void {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
-
     protected sayThanks(): void {
         // usually there are lots of pictures in btschool torrent page
         super.sayThanks(20000);

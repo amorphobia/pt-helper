@@ -26,16 +26,4 @@ export class KamePT extends NexusPHP {
     public onLoad(): void {
         super.onLoad();
     }
-
-    protected tweakBanner(): void {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
 }
