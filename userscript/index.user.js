@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.21
+// @version 0.1.22
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -19,6 +19,7 @@
 // @match *://pt.sjtu.edu.cn/*
 // @match *://pterclub.com/*
 // @match *://tjupt.org/*
+// @match *://u2.dmhy.org/*
 // @match *://www.hdarea.co/*
 // @match *://www.htpt.cc/*
 // @match *://www.icc2022.com/*
@@ -152,7 +153,7 @@ class NexusPHP extends common_1.Common {
         const re = /[\w\d]{32}/;
         const tds = doc.querySelectorAll("td.rowfollow");
         for (const td of tds) {
-            const result = re.exec(td.innerText);
+            const result = re.exec(td.innerHTML);
             if (result) {
                 this.setHostValue("passkey", result[0]);
                 this.passkey = result[0];
@@ -220,7 +221,7 @@ img.torrent_direct_link {
         const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
         for (const tr of trs) {
             const tds = tr.querySelectorAll("td");
-            const td = tds.length < 3 ? tds[1] : tds[2];
+            const td = tds.length < 3 ? tds[1] : tds.length < 4 ? tds[2] : tds[3];
             const dl = td.querySelector("a");
             const result = id_re.exec((_a = dl === null || dl === void 0 ? void 0 : dl.href) !== null && _a !== void 0 ? _a : "");
             if (!result) {
@@ -6236,6 +6237,36 @@ exports.TJUPT = TJUPT;
 
 /***/ }),
 /* 18 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DMHY = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class DMHY extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("u2.dmhy.org");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+}
+exports.DMHY = DMHY;
+
+
+/***/ }),
+/* 19 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -6247,7 +6278,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HDarea = void 0;
 const sweetalert2_1 = __importDefault(__webpack_require__(9));
 const NexusPHP_1 = __webpack_require__(2);
-const common_1 = __webpack_require__(3);
 const i18n_1 = __webpack_require__(4);
 class HDarea extends NexusPHP_1.NexusPHP {
     constructor() {
@@ -6271,52 +6301,6 @@ class HDarea extends NexusPHP_1.NexusPHP {
     }
     onLoad() {
         super.onLoad();
-    }
-    addDirectLink() {
-        var _a;
-        if (!this.getHostValue("directLink") || this.passkey == "") {
-            return;
-        }
-        const id_re = /id=[\d]+/;
-        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1");
-        for (const tr of trs) {
-            const tds = tr.querySelectorAll("td");
-            if (!tds || tds.length < 4) {
-                continue;
-            }
-            const dl = tds[3].querySelector("a");
-            const result = id_re.exec((_a = dl === null || dl === void 0 ? void 0 : dl.href) !== null && _a !== void 0 ? _a : "");
-            if (!result) {
-                continue;
-            }
-            const direct_link = `https://${this.host}/download.php?${result[0]}&passkey=${this.passkey}`;
-            const img = document.createElement("img");
-            img.setAttribute("src", "pic/trans.gif");
-            img.setAttribute("class", "torrent_direct_link");
-            img.setAttribute("alt", "DL");
-            const a = document.createElement("a");
-            a.setAttribute("title", i18n_1.I18N[this.locale].passkeyWarning);
-            a.setAttribute("onclick", "return false");
-            a.setAttribute("id", "direct_link");
-            a.setAttribute("href", direct_link);
-            a.setAttribute("data-clipboard-text", direct_link);
-            a.appendChild(img);
-            tds[3].prepend(a);
-        }
-        this.css += `
-.swal2-container {
-    z-index: 4294967295;
-}
-h2#swal2-title {
-    background-color: transparent;
-}
-img.torrent_direct_link {
-    width: 16px;
-    height: 16px;
-    background: url('${common_1.direct_link_img_url}');
-    paddint-bottom: 1px;
-}`;
-        this.registerClipboard("#direct_link");
     }
     attendance() {
         if (!this.getHostValue("attendance")) {
@@ -6360,7 +6344,7 @@ exports.HDarea = HDarea;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6397,19 +6381,14 @@ exports.HTPT = HTPT;
 
 
 /***/ }),
-/* 20 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/* 21 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ICC2022 = void 0;
-const sweetalert2_1 = __importDefault(__webpack_require__(9));
 const NexusPHP_1 = __webpack_require__(2);
-const common_1 = __webpack_require__(3);
 const i18n_1 = __webpack_require__(4);
 class ICC2022 extends NexusPHP_1.NexusPHP {
     constructor() {
@@ -6434,71 +6413,12 @@ class ICC2022 extends NexusPHP_1.NexusPHP {
     onLoad() {
         super.onLoad();
     }
-    addDirectLink() {
-        var _a;
-        if (!this.getHostValue("directLink")) {
-            return;
-        }
-        this.css += `
-.swal2-container {
-    z-index: 4294967295;
-}
-h2#swal2-title {
-    background-color: transparent;
-    background-image: none;
-    border: none;
-}
-img.torrent_direct_link {
-    width: 16px;
-    height: 16px;
-    background: url('${common_1.direct_link_img_url}');
-    padding-bottom: 1px;
-}`;
-        if (this.passkey == "") {
-            if (location.href.indexOf("/torrents.php") >= 0) {
-                sweetalert2_1.default.fire({
-                    position: "top-end",
-                    icon: "info",
-                    title: `${i18n_1.I18N[this.locale].noPasskey}「${i18n_1.I18N[this.locale].directLinkName}」`,
-                    showConfirmButton: false,
-                    timer: 5000,
-                    toast: true
-                });
-            }
-            return;
-        }
-        const id_re = /id=[\d]+/;
-        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
-        for (const tr of trs) {
-            const tds = tr.querySelectorAll("td");
-            const td = tds[3];
-            const dl = td.querySelector("a");
-            const result = id_re.exec((_a = dl === null || dl === void 0 ? void 0 : dl.href) !== null && _a !== void 0 ? _a : "");
-            if (!result) {
-                continue;
-            }
-            const direct_link = `https://${this.host}/download.php?${result[0]}&passkey=${this.passkey}`;
-            const img = document.createElement("img");
-            img.setAttribute("src", "pic/trans.gif");
-            img.setAttribute("class", "torrent_direct_link");
-            img.setAttribute("alt", "DL");
-            const a = document.createElement("a");
-            a.setAttribute("title", i18n_1.I18N[this.locale].passkeyWarning);
-            a.setAttribute("onclick", "return false");
-            a.setAttribute("id", "direct_link");
-            a.setAttribute("href", direct_link);
-            a.setAttribute("data-clipboard-text", direct_link);
-            a.appendChild(img);
-            td.prepend(a);
-        }
-        this.registerClipboard("#direct_link");
-    }
 }
 exports.ICC2022 = ICC2022;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6584,10 +6504,11 @@ const pt_btschool_club_1 = __webpack_require__(14);
 const pt_sjtu_edu_cn_1 = __webpack_require__(15);
 const pterclub_com_1 = __webpack_require__(16);
 const index_1 = __webpack_require__(17);
-const www_hdarea_co_1 = __webpack_require__(18);
-const www_htpt_cc_1 = __webpack_require__(19);
-const www_icc2022_com_1 = __webpack_require__(20);
-const zmpt_cc_1 = __webpack_require__(21);
+const u2_dmhy_org_1 = __webpack_require__(18);
+const www_hdarea_co_1 = __webpack_require__(19);
+const www_htpt_cc_1 = __webpack_require__(20);
+const www_icc2022_com_1 = __webpack_require__(21);
+const zmpt_cc_1 = __webpack_require__(22);
 const host = window.location.host;
 const sites = new Map([
     ["carpt.net", carpt_net_1.CarPT],
@@ -6599,6 +6520,7 @@ const sites = new Map([
     ["pt.sjtu.edu.cn", pt_sjtu_edu_cn_1.SJTU],
     ["pterclub.com", pterclub_com_1.Pterclub],
     ["tjupt.org", index_1.TJUPT],
+    ["u2.dmhy.org", u2_dmhy_org_1.DMHY],
     ["www.hdarea.co", www_hdarea_co_1.HDarea],
     ["www.htpt.cc", www_htpt_cc_1.HTPT],
     ["www.icc2022.com", www_icc2022_com_1.ICC2022],
