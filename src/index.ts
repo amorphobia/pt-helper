@@ -7,6 +7,7 @@ import { BTSCHOOL } from "./sites/pt.btschool.club";
 import { SJTU } from "./sites/pt.sjtu.edu.cn";
 import { Pterclub } from "./sites/pterclub.com";
 import { TJUPT } from "./sites/tjupt.org/index";
+import { DMHY } from "./sites/u2.dmhy.org";
 import { HDarea } from "./sites/www.hdarea.co";
 import { HTPT } from "./sites/www.htpt.cc";
 import { ICC2022 } from "./sites/www.icc2022.com";
@@ -23,6 +24,7 @@ const sites = new Map<string, any>([
     ["pt.sjtu.edu.cn", SJTU],
     ["pterclub.com", Pterclub],
     ["tjupt.org", TJUPT],
+    ["u2.dmhy.org", DMHY],
     ["www.hdarea.co", HDarea],
     ["www.htpt.cc", HTPT],
     ["www.icc2022.com", ICC2022],

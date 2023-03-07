@@ -70,7 +70,7 @@ export class NexusPHP extends Common {
         const re = /[\w\d]{32}/;
         const tds = doc.querySelectorAll("td.rowfollow") as NodeListOf<HTMLTableCellElement>;
         for (const td of tds) {
-            const result = re.exec(td.innerText);
+            const result = re.exec(td.innerHTML);
             if (result) {
                 this.setHostValue("passkey", result[0]);
                 this.passkey = result[0];
