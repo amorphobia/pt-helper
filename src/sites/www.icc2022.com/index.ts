@@ -1,6 +1,4 @@
-import Swal from "sweetalert2";
 import { NexusPHP } from "../../architectures/NexusPHP";
-import { direct_link_img_url } from "../../common";
 import { I18N } from "../../i18n/i18n";
 
 export class ICC2022 extends NexusPHP {
