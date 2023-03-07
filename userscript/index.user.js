@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.20
+// @version 0.1.21
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -14,7 +14,7 @@
 // @match *://hhanclub.top/*
 // @match *://kamept.com/*
 // @match *://nanyangpt.com/*
-// @match *://pt.2xfree.org
+// @match *://pt.2xfree.org/*
 // @match *://pt.btschool.club/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://pterclub.com/*
