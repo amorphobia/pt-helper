@@ -29,56 +29,6 @@ export class HDarea extends NexusPHP {
         super.onLoad();
     }
 
-    protected addDirectLink(): void {
-        if (!this.getHostValue("directLink") || this.passkey == "") {
-            return;
-        }
-
-        const id_re = /id=[\d]+/;
-        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1");
-
-        for (const tr of trs) {
-            const tds = tr.querySelectorAll("td");
-            if (!tds || tds.length < 4) {
-                continue;
-            }
-            const dl = tds[3].querySelector("a");
-            const result = id_re.exec(dl?.href ?? "");
-            if (!result) {
-                continue;
-            }
-            const direct_link = `https://${this.host}/download.php?${result[0]}&passkey=${this.passkey}`;
-            const img = document.createElement("img");
-            img.setAttribute("src", "pic/trans.gif");
-            img.setAttribute("class", "torrent_direct_link");
-            img.setAttribute("alt", "DL");
-            const a = document.createElement("a");
-            a.setAttribute("title", I18N[this.locale].passkeyWarning);
-            a.setAttribute("onclick", "return false");
-            a.setAttribute("id", "direct_link");
-            a.setAttribute("href", direct_link);
-            a.setAttribute("data-clipboard-text", direct_link);
-            a.appendChild(img);
-            tds[3].prepend(a);
-        }
-
-        this.css += `
-.swal2-container {
-    z-index: 4294967295;
-}
-h2#swal2-title {
-    background-color: transparent;
-}
-img.torrent_direct_link {
-    width: 16px;
-    height: 16px;
-    background: url('${direct_link_img_url}');
-    paddint-bottom: 1px;
-}`;
-
-        this.registerClipboard("#direct_link");
-    }
-
     protected attendance() {
         if (!this.getHostValue("attendance")) {
             return;

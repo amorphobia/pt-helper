@@ -144,7 +144,10 @@ img.torrent_direct_link {
 
         for (const tr of trs) {
             const tds = tr.querySelectorAll("td");
-            const td = tds.length < 3 ? tds[1] : tds[2];
+            // NanyangPT: there are 3 tds if other versions of torrents exist, otherwise only 2 tds
+            // 2xFree / ICC2022 / ZmPT: there are 4 tds, and td[0] is for torrent thumbnail
+            // HTPT: two tds, and another two tds nested inside td[1], the target is still td[3]
+            const td = tds.length < 3 ? tds[1] : tds.length < 4 ? tds[2] : tds[3];
             const dl = td.querySelector("a");
             const result = id_re.exec(dl?.href ?? "");
             if (!result) {
