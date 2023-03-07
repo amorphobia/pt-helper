@@ -2,6 +2,7 @@ import { CarPT } from "./sites/carpt.net";
 import { Hhanclub } from "./sites/hhanclub.top";
 import { KamePT } from "./sites/kamept.com";
 import { NanyangPT } from "./sites/nanyangpt.com";
+import { _2xFree } from "./sites/pt.2xfree.org";
 import { BTSCHOOL } from "./sites/pt.btschool.club";
 import { SJTU } from "./sites/pt.sjtu.edu.cn";
 import { Pterclub } from "./sites/pterclub.com";
@@ -16,6 +17,7 @@ const sites = new Map<string, any>([
     ["hhanclub.top", Hhanclub],
     ["kamept.com", KamePT],
     ["nanyangpt.com", NanyangPT],
+    ["pt.2xfree.org", _2xFree],
     ["pt.btschool.club", BTSCHOOL],
     ["pt.sjtu.edu.cn", SJTU],
     ["pterclub.com", Pterclub],
