@@ -6261,6 +6261,22 @@ class DMHY extends NexusPHP_1.NexusPHP {
     onLoad() {
         super.onLoad();
     }
+    sayThanks(ms = 2000) {
+        if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
+            return;
+        }
+        this.wait(ms).then(() => {
+            const url = window.location.href;
+            const result = /id=(\d+)/.exec(url);
+            if (!result) {
+                return;
+            }
+            const input = document.querySelector("[onclick=\"saythanks(" + result[1] + ",0);\"]");
+            if (input && !input.disabled) {
+                input.click();
+            }
+        }).catch(() => { console.error("Failed to say thanks."); });
+    }
 }
 exports.DMHY = DMHY;
 

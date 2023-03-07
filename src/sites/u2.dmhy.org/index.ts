@@ -19,4 +19,21 @@ export class DMHY extends NexusPHP {
     public onLoad(): void {
         super.onLoad();
     }
+
+    protected sayThanks(ms = 2000): void {
+        if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
+            return;
+        }
+        this.wait(ms).then(() => {
+            const url = window.location.href;
+            const result = /id=(\d+)/.exec(url);
+            if (!result) {
+                return;
+            }
+            const input = document.querySelector("[onclick=\"saythanks(" + result[1] + ",0);\"]") as HTMLInputElement;
+            if (input && !input.disabled) {
+                input.click();
+            }
+        }).catch(() => { console.error("Failed to say thanks."); });
+    }
 }
