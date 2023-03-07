@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name PT Helper
 // @name:zh-CN PT 助手
-// @version 0.1.19
+// @version 0.1.20
 // @namespace https://github.com/amorphobia/pt-helper
 // @description A helper for private trackers
 // @description:zh-CN 私密种子站点的助手
@@ -14,12 +14,14 @@
 // @match *://hhanclub.top/*
 // @match *://kamept.com/*
 // @match *://nanyangpt.com/*
+// @match *://pt.2xfree.org
 // @match *://pt.btschool.club/*
 // @match *://pt.sjtu.edu.cn/*
 // @match *://pterclub.com/*
 // @match *://tjupt.org/*
 // @match *://www.hdarea.co/*
 // @match *://www.htpt.cc/*
+// @match *://www.icc2022.com/*
 // @match *://zmpt.cc/*
 // @require https://cdn.jsdelivr.net/npm/clipboard@2.0.11
 // @require https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8
@@ -70,17 +72,6 @@ class CarPT extends NexusPHP_1.NexusPHP {
     }
     onLoad() {
         super.onLoad();
-    }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
     }
 }
 exports.CarPT = CarPT;
@@ -170,7 +161,17 @@ class NexusPHP extends common_1.Common {
         }
         return false;
     }
-    tweakBanner() { }
+    tweakBanner() {
+        if (this.getHostValue("bannerHide")) {
+            this.css += `
+table.head {
+    display: none;
+}
+table.mainouter {
+    margin-top: 20px;
+}`;
+        }
+    }
     sayThanks(ms = 2000) {
         if (!this.getHostValue("thanks") || location.href.indexOf("/details.php") < 0) {
             return;
@@ -5800,17 +5801,6 @@ class KamePT extends NexusPHP_1.NexusPHP {
     onLoad() {
         super.onLoad();
     }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
 }
 exports.KamePT = KamePT;
 
@@ -5838,6 +5828,13 @@ class NanyangPT extends NexusPHP_1.NexusPHP {
             }
         ].concat(this.menu_items);
     }
+    init() {
+        const url = new URL(window.location.href);
+        if (url.protocol == "http:") {
+            url.protocol = "https:";
+            window.location.replace(url);
+        }
+    }
     onLoad() {
         super.onLoad();
     }
@@ -5861,6 +5858,43 @@ exports.NanyangPT = NanyangPT;
 
 /***/ }),
 /* 13 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports._2xFree = void 0;
+const NexusPHP_1 = __webpack_require__(2);
+const i18n_1 = __webpack_require__(4);
+class _2xFree extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("pt.2xfree.org");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+}
+exports._2xFree = _2xFree;
+
+
+/***/ }),
+/* 14 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -5895,17 +5929,6 @@ class BTSCHOOL extends NexusPHP_1.NexusPHP {
     }
     onLoad() {
         super.onLoad();
-    }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
     }
     sayThanks() {
         super.sayThanks(20000);
@@ -5944,7 +5967,7 @@ h2#swal2-title {
                         if (result && attend.parentElement && attend.parentElement.parentElement) {
                             attend.parentElement.parentElement.setAttribute("style", "border: none; padding: 10px; background: green");
                             attend.setAttribute("href", "index.php");
-                            attend.innerHTML = `<font color="white">result[0]</font>`;
+                            attend.innerHTML = `<font color="white">${result[0]}</font>`;
                         }
                     },
                 });
@@ -5960,7 +5983,7 @@ exports.BTSCHOOL = BTSCHOOL;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6001,7 +6024,7 @@ exports.SJTU = SJTU;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6030,17 +6053,6 @@ class Pterclub extends NexusPHP_1.NexusPHP {
                 "value": true
             }
         ].concat(this.menu_items);
-    }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
     }
     onLoad() {
         super.onLoad();
@@ -6101,7 +6113,7 @@ exports.Pterclub = Pterclub;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6223,7 +6235,7 @@ exports.TJUPT = TJUPT;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -6259,17 +6271,6 @@ class HDarea extends NexusPHP_1.NexusPHP {
     }
     onLoad() {
         super.onLoad();
-    }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
     }
     addDirectLink() {
         var _a;
@@ -6359,7 +6360,7 @@ exports.HDarea = HDarea;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6391,23 +6392,113 @@ class HTPT extends NexusPHP_1.NexusPHP {
     onLoad() {
         super.onLoad();
     }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
-    }
 }
 exports.HTPT = HTPT;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ICC2022 = void 0;
+const sweetalert2_1 = __importDefault(__webpack_require__(9));
+const NexusPHP_1 = __webpack_require__(2);
+const common_1 = __webpack_require__(3);
+const i18n_1 = __webpack_require__(4);
+class ICC2022 extends NexusPHP_1.NexusPHP {
+    constructor() {
+        super("www.icc2022.com");
+        this.menu_items = [
+            {
+                "id": "bannerHide",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].bannerHideName,
+                "name": i18n_1.I18N[this.locale].bannerHideName,
+                "value": false
+            },
+            {
+                "id": "attendance",
+                "type": "switch",
+                "display": i18n_1.I18N[this.locale].attendance,
+                "name": i18n_1.I18N[this.locale].attendance,
+                "value": true
+            }
+        ].concat(this.menu_items);
+    }
+    onLoad() {
+        super.onLoad();
+    }
+    addDirectLink() {
+        var _a;
+        if (!this.getHostValue("directLink")) {
+            return;
+        }
+        this.css += `
+.swal2-container {
+    z-index: 4294967295;
+}
+h2#swal2-title {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+img.torrent_direct_link {
+    width: 16px;
+    height: 16px;
+    background: url('${common_1.direct_link_img_url}');
+    padding-bottom: 1px;
+}`;
+        if (this.passkey == "") {
+            if (location.href.indexOf("/torrents.php") >= 0) {
+                sweetalert2_1.default.fire({
+                    position: "top-end",
+                    icon: "info",
+                    title: `${i18n_1.I18N[this.locale].noPasskey}「${i18n_1.I18N[this.locale].directLinkName}」`,
+                    showConfirmButton: false,
+                    timer: 5000,
+                    toast: true
+                });
+            }
+            return;
+        }
+        const id_re = /id=[\d]+/;
+        const trs = document.querySelectorAll("table.torrentname > tbody > tr:nth-of-type(1)");
+        for (const tr of trs) {
+            const tds = tr.querySelectorAll("td");
+            const td = tds[3];
+            const dl = td.querySelector("a");
+            const result = id_re.exec((_a = dl === null || dl === void 0 ? void 0 : dl.href) !== null && _a !== void 0 ? _a : "");
+            if (!result) {
+                continue;
+            }
+            const direct_link = `https://${this.host}/download.php?${result[0]}&passkey=${this.passkey}`;
+            const img = document.createElement("img");
+            img.setAttribute("src", "pic/trans.gif");
+            img.setAttribute("class", "torrent_direct_link");
+            img.setAttribute("alt", "DL");
+            const a = document.createElement("a");
+            a.setAttribute("title", i18n_1.I18N[this.locale].passkeyWarning);
+            a.setAttribute("onclick", "return false");
+            a.setAttribute("id", "direct_link");
+            a.setAttribute("href", direct_link);
+            a.setAttribute("data-clipboard-text", direct_link);
+            a.appendChild(img);
+            td.prepend(a);
+        }
+        this.registerClipboard("#direct_link");
+    }
+}
+exports.ICC2022 = ICC2022;
+
+
+/***/ }),
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -6438,17 +6529,6 @@ class ZmPT extends NexusPHP_1.NexusPHP {
     }
     onLoad() {
         super.onLoad();
-    }
-    tweakBanner() {
-        if (this.getHostValue("bannerHide")) {
-            this.css += `
-table.head {
-    display: none;
-}
-table.mainouter {
-    margin-top: 20px;
-}`;
-        }
     }
 }
 exports.ZmPT = ZmPT;
@@ -6499,25 +6579,29 @@ const carpt_net_1 = __webpack_require__(1);
 const hhanclub_top_1 = __webpack_require__(10);
 const kamept_com_1 = __webpack_require__(11);
 const nanyangpt_com_1 = __webpack_require__(12);
-const pt_btschool_club_1 = __webpack_require__(13);
-const pt_sjtu_edu_cn_1 = __webpack_require__(14);
-const pterclub_com_1 = __webpack_require__(15);
-const index_1 = __webpack_require__(16);
-const www_hdarea_co_1 = __webpack_require__(17);
-const www_htpt_cc_1 = __webpack_require__(18);
-const zmpt_cc_1 = __webpack_require__(19);
+const pt_2xfree_org_1 = __webpack_require__(13);
+const pt_btschool_club_1 = __webpack_require__(14);
+const pt_sjtu_edu_cn_1 = __webpack_require__(15);
+const pterclub_com_1 = __webpack_require__(16);
+const index_1 = __webpack_require__(17);
+const www_hdarea_co_1 = __webpack_require__(18);
+const www_htpt_cc_1 = __webpack_require__(19);
+const www_icc2022_com_1 = __webpack_require__(20);
+const zmpt_cc_1 = __webpack_require__(21);
 const host = window.location.host;
 const sites = new Map([
     ["carpt.net", carpt_net_1.CarPT],
     ["hhanclub.top", hhanclub_top_1.Hhanclub],
     ["kamept.com", kamept_com_1.KamePT],
     ["nanyangpt.com", nanyangpt_com_1.NanyangPT],
+    ["pt.2xfree.org", pt_2xfree_org_1._2xFree],
     ["pt.btschool.club", pt_btschool_club_1.BTSCHOOL],
     ["pt.sjtu.edu.cn", pt_sjtu_edu_cn_1.SJTU],
     ["pterclub.com", pterclub_com_1.Pterclub],
     ["tjupt.org", index_1.TJUPT],
     ["www.hdarea.co", www_hdarea_co_1.HDarea],
     ["www.htpt.cc", www_htpt_cc_1.HTPT],
+    ["www.icc2022.com", www_icc2022_com_1.ICC2022],
     ["zmpt.cc", zmpt_cc_1.ZmPT],
 ]);
 const site = sites.has(host) ? new (sites.get(host))() : undefined;
