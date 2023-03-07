@@ -81,7 +81,7 @@ h2#swal2-title {
                         if (result && attend.parentElement && attend.parentElement.parentElement) {
                             attend.parentElement.parentElement.setAttribute("style", "border: none; padding: 10px; background: green");
                             attend.setAttribute("href", "index.php");
-                            attend.innerHTML = `<font color="white">result[0]</font>`;
+                            attend.innerHTML = `<font color="white">${result[0]}</font>`;
                         }
                     },
                 });
