@@ -16,6 +16,14 @@ export class NanyangPT extends NexusPHP {
         ].concat(this.menu_items);
     }
 
+    public init(): void {
+        const url = new URL(window.location.href);
+        if (url.protocol == "http:") {
+            url.protocol = "https:";
+            window.location.replace(url);
+        }
+    }
+
     public onLoad(): void {
         super.onLoad();
     }
