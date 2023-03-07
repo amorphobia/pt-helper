@@ -9,6 +9,7 @@ import { Pterclub } from "./sites/pterclub.com";
 import { TJUPT } from "./sites/tjupt.org/index";
 import { HDarea } from "./sites/www.hdarea.co";
 import { HTPT } from "./sites/www.htpt.cc";
+import { ICC2022 } from "./sites/www.icc2022.com";
 import { ZmPT } from "./sites/zmpt.cc";
 
 const host = window.location.host;
@@ -24,6 +25,7 @@ const sites = new Map<string, any>([
     ["tjupt.org", TJUPT],
     ["www.hdarea.co", HDarea],
     ["www.htpt.cc", HTPT],
+    ["www.icc2022.com", ICC2022],
     ["zmpt.cc", ZmPT],
 ]);
 const site = sites.has(host) ? new (sites.get(host))() : undefined;
